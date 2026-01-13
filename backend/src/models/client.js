@@ -18,6 +18,10 @@ const clientSchema = new mongoose.Schema({
       message: 'Debe ser un email válido o un teléfono con formato +1234567890'
     }
   },
+  purchasesCount:{
+    type:Number,
+    default:0
+  },
   isActive: {
     type: Boolean,
     default: true,

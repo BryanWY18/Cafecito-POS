@@ -1,27 +1,25 @@
-import Sell from '../models/sell.js';
+import Sale from '../models/sale.js';
 
-async function getSells(req,res,next) {
+async function getSales(req,res,next) {
   try {
-    const sells = await Sell.find()
+    const Sales = await Sale.find()
       .populate('customerId')
-      .populate('items.productId')
       .sort({ createdAt: -1 });
-    res.json(sells);
+    res.json(Sales);
   } catch (error) {
     next(error);
   }
 }
 
-async function getSellById(req, res) {
+async function getSaleById(req, res) {
   try {
     const id = req.params.id;
-    const sell = await Sell.findById(id)
-      .populate('user')
-      .populate('products.productId')
-    if (!sell) {
-      return res.status(404).json({ message: 'Sell not found' });
+    const Sale = await Sale.findById(id)
+      .populate('Client')
+    if (!Sale) {
+      return res.status(404).json({ message: 'Sale not found' });
     }
-    res.json(sell);
+    res.json(Sale);
   } catch (error) {
     next(error);
   }
@@ -40,7 +38,7 @@ async function createSale(req,res,next) {
         });
       }
     }
-    const newSale = await Sell.create({
+    const newSale = await Sale.create({
       customerId,
       paymentMethod,
       items
@@ -53,4 +51,4 @@ async function createSale(req,res,next) {
   }
 }
 
-export{ getSells, getSellById, createSale};
+export{ getSales, getSaleById, createSale};
