@@ -3,7 +3,7 @@
 import { connectDB } from "../src/config/database.js";
 import  Product from "../src/models/product.js";
 import Client from "../src/models/client.js";
-import Sale from "../src/models/sell.js";
+import Sale from "../src/models/sale.js";
 
 const seedDB = async () => {
   await connectDB();
