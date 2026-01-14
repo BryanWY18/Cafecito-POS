@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 const saleItem = new mongoose.Schema({
   saleId:{
     type:mongoose.Schema.Types.ObjectId,
-    ref:'Sell',
+    ref:'Sale',
   },
   productId:{
     type:mongoose.Schema.Types.ObjectId,
@@ -11,7 +11,7 @@ const saleItem = new mongoose.Schema({
     required:true,
   },
   productNameSnapshot:{
-    type:string,
+    type:String,
     required:true,
   },
   unitPriceSnapshot:{
