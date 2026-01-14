@@ -1,0 +1,60 @@
+@baseUrl = http://localhost:3000/api
+
+
+### Colección /LOGIN
+
+POST {{baseUrl}}/register
+Content-Type: application/json
+
+{
+  "displayName": "Bryan",
+  "email": "email@example.com",
+  "password": "qwerty1"
+}
+
+### Colección /PRODUCTS
+
+### Petición GET
+GET {{baseUrl}}/products
+
+### Petición GET by Id
+GET {{baseUrl}}/products/6966ae6cf5bafa00cfcab097
+
+### Petición POST
+POST  {{baseUrl}}/products
+Content-Type: application/json
+
+{
+  "name": "Espresso",
+  "price": 3.50,
+  "stock": 100
+}
+
+### Petición PUT
+PUT {{baseUrl}}/products/
+
+### Petición DELETE
+DELETE {{baseUrl}}/products
+
+
+
+### Colección /CUSTOMERS
+
+### Petición GET
+GET {{baseUrl}}/customers
+
+### Petición POST
+POST  {{baseUrl}}/customers
+
+### Petición GET/:id
+GET {{baseUrl}}/customers/6966ae6cf5bafa00cfcab09c
+
+
+
+### Colección /SALES
+
+### Petición POST
+POST  {{baseUrl}}/sales
+
+### Petición GET/:id
+GET {{baseUrl}}/sales/

@@ -1,6 +1,6 @@
 import express from 'express';
 import { body,param,query } from "express-validator";
-import validate from '../middlewares/validation';
+import validate from '../middlewares/validation.js';
 import {
   getUserProfile,
   getAllUsers,
@@ -13,7 +13,7 @@ import {
   deleteUser,
   searchUsers
 } from '../controllers/userController.js';
-import isAdmin from '../middlewares/isAdminMiddleware';
+import isAdmin from '../middlewares/isAdminMiddleware.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
@@ -34,3 +34,5 @@ const profileValidations= [
 ];
 
 router.get('/profile',authMiddleware,getUserProfile);
+
+export default router;

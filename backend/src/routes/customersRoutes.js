@@ -1,9 +1,10 @@
 import express from 'express';
+import {body} from 'express-validator';
 import {
     getClients,
     getClientById,
     registerClient,
-} from '../controllers/clientController.js';
+} from '../controllers/clientController.js';  
 import validate from '../middlewares/validation.js';
 
 const router = express.Router();
