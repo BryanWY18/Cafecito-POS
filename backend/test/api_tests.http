@@ -1,9 +1,10 @@
 @baseUrl = http://localhost:3000/api
+@tokenAdmin = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTY3ZGMxNDlhNjljZjAxYzc2Y2ZkZTAiLCJkaXNwbGF5TmFtZSI6IkJyeWFuIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzY4NDE2NjMxLCJleHAiOjE3Njg0MjAyMzF9.vbQdajVptJtWoYsl_T5E08UAj6NWsSQxhC4nFkXVsz0
 
 
-### Colección /LOGIN
+### Colección /REGISTER
 
-POST {{baseUrl}}/register
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
@@ -11,6 +12,20 @@ Content-Type: application/json
   "email": "email@example.com",
   "password": "qwerty1"
 }
+
+### Colección /LOGIN
+
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "email@example.com",
+  "password": "qwerty1"
+}
+
+
+#-----------------------------------------------
+
 
 ### Colección /PRODUCTS
 
@@ -22,6 +37,7 @@ GET {{baseUrl}}/products/6966ae6cf5bafa00cfcab097
 
 ### Petición POST
 POST  {{baseUrl}}/products
+Authorization: Bearer {{tokenAdmin}}
 Content-Type: application/json
 
 {
@@ -31,11 +47,23 @@ Content-Type: application/json
 }
 
 ### Petición PUT
-PUT {{baseUrl}}/products/
+PUT {{baseUrl}}/products/6967e5a6d5838658acb9bdb8
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "name": "Espresso Moka",
+  "price": 4,
+  "stock": 150
+}
+
 
 ### Petición DELETE
-DELETE {{baseUrl}}/products
+DELETE {{baseUrl}}/products/6967e5a6d5838658acb9bdb8
+Authorization: Bearer {{tokenAdmin}}
 
+
+#-----------------------------------------------
 
 
 ### Colección /CUSTOMERS
@@ -45,16 +73,39 @@ GET {{baseUrl}}/customers
 
 ### Petición POST
 POST  {{baseUrl}}/customers
+Content-Type: application/json
+
+{
+  "name": "Leonardo Rodriguez",
+  "phoneOrEmail": "+56987654321"
+}
 
 ### Petición GET/:id
 GET {{baseUrl}}/customers/6966ae6cf5bafa00cfcab09c
 
+#-----------------------------------------------
 
 
 ### Colección /SALES
 
 ### Petición POST
 POST  {{baseUrl}}/sales
+Content-Type: application/json
+
+{
+  "customerId": "6966ae6cf5bafa00cfcab09c",
+  "paymentMethod": "cash",
+  "items": [
+    {
+      "productId": "6966ae6cf5bafa00cfcab097",
+      "quantity": 2
+    },
+    {
+      "productId": "6967de519a69cf01c76cfde8",
+      "quantity": 1
+    }
+  ]
+}
 
 ### Petición GET/:id
 GET {{baseUrl}}/sales/
