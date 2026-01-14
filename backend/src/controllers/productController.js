@@ -9,7 +9,6 @@ async function getProducts(req, res) {
     const skip = (page - 1) * limit;
 
     const products = await Product.find()
-      .populate("category")
       .skip(skip)
       .limit(limit)
       .sort({ name: 1 });

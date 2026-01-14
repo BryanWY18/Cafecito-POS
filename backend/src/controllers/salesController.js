@@ -16,7 +16,7 @@ async function getSaleById(req, res) {
   try {
     const id = req.params.id;
     const Sale = await Sale.findById(id)
-      .populate('Client')
+      .populate('customerId')
     if (!Sale) {
       return res.status(404).json({ message: 'Sale not found' });
     }
