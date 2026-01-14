@@ -13,14 +13,13 @@ async function getSales(req,res,next) {
 }
 
 async function getSaleById(req, res) {
-  try {
+  try { 
     const id = req.params.id;
-    const Sale = await Sale.findById(id)
-      .populate('customerId')
-    if (!Sale) {
+    const sale = await Sale.findById(id).populate('items')
+    if (!sale) {
       return res.status(404).json({ message: 'Sale not found' });
     }
-    res.json(Sale);
+    res.json(sale);
   } catch (error) {
     next(error);
   }
@@ -48,6 +47,7 @@ async function createSale(req,res,next) {
     const newSale = await Sale.create({
       customerId: customerId || null,
       paymentMethod,
+      items,
       subTotal,
       discountPercent,
       discountAmount,

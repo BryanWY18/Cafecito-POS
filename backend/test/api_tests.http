@@ -93,19 +93,24 @@ POST  {{baseUrl}}/sales
 Content-Type: application/json
 
 {
-  "customerId": "6966ae6cf5bafa00cfcab09c",
+  "customerId": "6966ae6cf5bafa00cfcab09d",
   "paymentMethod": "cash",
   "items": [
     {
-      "productId": "6966ae6cf5bafa00cfcab097",
-      "quantity": 2
+      "productId": "6966ae6cf5bafa00cfcab098",
+      "quantity": 2,
+      "unitPrice":40
     },
     {
-      "productId": "6967de519a69cf01c76cfde8",
-      "quantity": 1
+      "productId": "6966ae6cf5bafa00cfcab097",
+      "quantity": 1,
+      "unitPrice":50
     }
   ]
 }
 
 ### Petición GET/:id
-GET {{baseUrl}}/sales/
+GET {{baseUrl}}/sales/6967fa90e2acfbb47e8e2219
+
+### Petición GET
+GET {{baseUrl}}/sales
