@@ -1,16 +1,31 @@
 @baseUrl = http://localhost:3000/api
+@tokenAdmin = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTY3ZGMxNDlhNjljZjAxYzc2Y2ZkZTAiLCJkaXNwbGF5TmFtZSI6IkJyeWFuIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzY4NDE0NjMyLCJleHAiOjE3Njg0MTgyMzJ9.MrzrjOJZXTvC8M2FDIRMVf8sAmJCGlQQA6hULxNIB1w
 
 
-### Colección /LOGIN
+### Colección /REGISTER - /LOGIN
 
-POST {{baseUrl}}/register
+### /REGISTER
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "displayName": "Bryan",
+  "displayName": "Bryan Admin",
+  "email": "admin@example.com",
+  "password": "qwerty2",
+  "role": "admin"
+}
+
+### /LOGIN
+
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
   "email": "email@example.com",
   "password": "qwerty1"
 }
+
+#----------------------------------------------
 
 ### Colección /PRODUCTS
 
@@ -18,10 +33,11 @@ Content-Type: application/json
 GET {{baseUrl}}/products
 
 ### Petición GET by Id
-GET {{baseUrl}}/products/6966ae6cf5bafa00cfcab097
+GET {{baseUrl}}/products/6967de519a69cf01c76cfde8
 
 ### Petición POST
 POST  {{baseUrl}}/products
+Authorization: Bearer {{tokenAdmin}}
 Content-Type: application/json
 
 {
@@ -31,12 +47,21 @@ Content-Type: application/json
 }
 
 ### Petición PUT
-PUT {{baseUrl}}/products/
+PUT {{baseUrl}}/products/6967de519a69cf01c76cfde8
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "name": "Capuchino",
+  "price": 40,
+  "stock": 150
+}
 
 ### Petición DELETE
-DELETE {{baseUrl}}/products
+DELETE {{baseUrl}}/products/6967dfb29a69cf01c76cfdf9
+Authorization: Bearer {{tokenAdmin}}
 
-
+#----------------------------------------------
 
 ### Colección /CUSTOMERS
 
@@ -49,7 +74,7 @@ POST  {{baseUrl}}/customers
 ### Petición GET/:id
 GET {{baseUrl}}/customers/6966ae6cf5bafa00cfcab09c
 
-
+#----------------------------------------------
 
 ### Colección /SALES
 
@@ -58,3 +83,10 @@ POST  {{baseUrl}}/sales
 
 ### Petición GET/:id
 GET {{baseUrl}}/sales/
+
+
+
+
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTY3ZGMxNDlhNjljZjAxYzc2Y2ZkZTAiLCJkaXNwbGF5TmFtZSI6IkJyeWFuIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzY4NDE0NjMyLCJleHAiOjE3Njg0MTgyMzJ9.MrzrjOJZXTvC8M2FDIRMVf8sAmJCGlQQA6hULxNIB1w",
+
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTY3ZGMxNDlhNjljZjAxYzc2Y2ZkZTAiLCJpYXQiOjE3Njg0MTQ2MzIsImV4cCI6MTc2OTAxOTQzMn0.vjQfdMIpdXZzcZtREUydnMDJUFjgZSye7esFoTE_2Cg"
