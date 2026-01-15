@@ -98,13 +98,11 @@ Content-Type: application/json
   "items": [
     {
       "productId": "6966ae6cf5bafa00cfcab098",
-      "quantity": 2,
-      "unitPrice":40
+      "quantity": 2
     },
     {
       "productId": "6966ae6cf5bafa00cfcab097",
-      "quantity": 1,
-      "unitPrice":50
+      "quantity": 1
     }
   ]
 }
