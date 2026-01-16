@@ -15,7 +15,7 @@ import validate from '../middlewares/validation.js';
 const router = express.Router();
 
 router.get('/products',getProducts);
-router.get('products/:id',getProductById);
+router.get('/products/:id',getProductById);
 router.get('/products/',[
   query('q').optional().isString().trim().isLength({min:1,max:100}).withMessage('El término de búsqueda debe tener entre 1 y 100 caracteres'),
   query('minPrice').optional().isNumeric({min: 0}).withMessage('este campo debe ser un numero positivo'),

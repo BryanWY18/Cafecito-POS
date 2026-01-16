@@ -8,7 +8,6 @@ POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "displayName": "Bryan",
   "email": "email@example.com",
   "password": "qwerty1"
 }
@@ -33,7 +32,7 @@ Content-Type: application/json
 GET {{baseUrl}}/products
 
 ### Petición GET by Id
-GET {{baseUrl}}/products/6966ae6cf5bafa00cfcab097
+GET {{baseUrl}}/products/6967de519a69cf01c76cfde8
 
 ### Petición POST
 POST  {{baseUrl}}/products
@@ -104,7 +103,7 @@ Content-Type: application/json
 }
 
 ### Petición GET/:id
-GET {{baseUrl}}/sales/6969a6b7810845842bc471ea
+GET {{baseUrl}}/sales/6969a6b7810845842bc471ec
 
 ### Petición GET
 GET {{baseUrl}}/sales
