@@ -79,7 +79,7 @@ Content-Type: application/json
   "name": "Leonardo Rodriguez",
   "phoneOrEmail": "+56987654321"
 }
-
+  
 ### Petición GET/:id
 GET {{baseUrl}}/customers/6966ae6cf5bafa00cfcab09c
 
