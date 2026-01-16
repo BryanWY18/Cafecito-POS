@@ -1,5 +1,7 @@
 import Sale from '../models/sale.js';
 import SaleItem from '../models/saleItem.js';
+import Product from '../models/product.js';
+import Client from '../models/client.js';
 
 async function getSales(req,res,next) {
   try {
@@ -8,71 +10,150 @@ async function getSales(req,res,next) {
       .sort({ createdAt: -1 });
     res.json(Sales);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 }
 
 async function getSaleById(req, res) {
-  try {
+  try { 
     const id = req.params.id;
-    const Sale = await Sale.findById(id)
-      .populate('customerId')
-    if (!Sale) {
+    const sale = await Sale.findById(id).populate('customerId')
+    if (!sale) {
       return res.status(404).json({ message: 'Sale not found' });
     }
-    res.json(Sale);
+    res.json(sale);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 }
 
-async function createSale(req,res,next) {
-  try{
-    const {customerId,paymentMethod,items, discountPercent=0} = req.body;
+function generateTicket(sale, enrichedItems) {
+  return {
+    saleId: sale._id,
+    timestamp: sale.createdAt,
+    storeName: "Cafecito Feliz",
+    items: enrichedItems.map(item => ({
+      name: item.productName,
+      qty: item.quantity,
+      unitPrice: item.unitPrice,
+      lineTotal: item.lineTotal
+    })),
+    subtotal: sale.subTotal,
+    discount: sale.discountPercent > 0 
+      ? `${sale.discountPercent}% (-$${sale.discountAmount.toFixed(2)})` 
+      : "0%",
+    total: sale.total,
+    paymentMethod: sale.paymentMethod
+  };
+}
 
-    if( !paymentMethod || !Array.isArray(items) || items.length===0){
-      return res.status(400).json({error:'Payment and products array are required'});
+async function createSaleItems(saleId, enrichedItems) {
+  return await SaleItem.insertMany(
+    enrichedItems.map(item => ({
+      saleId,
+      productId: item.productId,
+      productNameSnapshot: item.productName,
+      unitPriceSnapshot: item.unitPrice,
+      quantity: item.quantity,
+      lineTotal: item.lineTotal
+    }))
+  );
+}
+
+async function createSale(req, res, next) {
+  try {
+    const { customerId, paymentMethod , items } = req.body;
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(422).json({error:'Payment and products array are required'});;
     }
+
+    const productIds = items.map(item => item.productId);
+    const products = await Product.find({ _id: { $in: productIds } });
+    if (products.length !== items.length) {
+      return res.status(422).json({error:'One or more products do not exist'});
+    }
+
+    // Crear mapa de productos
+    const productMap = new Map(products.map(p => [p._id.toString(), p]));
+    // Validar stock
     for (const item of items) {
-      if (!item.productId || !item.quantity || !item.unitPrice || item.quantity < 1) {
-        return res.status(400).json({
-          error: 'Each product must have productId, quantity >= 1, and unitPrice'
+      const product = productMap.get(item.productId);
+      if (product.stock < item.quantity) {
+        stockErrors.push({
+          productId: item.productId,
+          message: `Only ${product.stock} available, requested ${item.quantity}`
         });
       }
     }
-    const subTotal = items.reduce((sum, item) => {
-      return sum + (item.unitPrice * item.quantity);
-    }, 0);
-    const discountAmount = (subTotal * discountPercent) / 100;
-    const total = subTotal - discountAmount;
+    // Calcular descuento
+    let discountPercent = 0;
+    let customer = null;
+    if (customerId) {
+      customer = await Client.findById(customerId);
+      if (customer && customer.purchasesCount > 0) {
+        if (customer.purchasesCount <= 3) discountPercent = 5;
+        else if (customer.purchasesCount <= 7) discountPercent = 10;
+        else discountPercent = 15;
+      }
+    }
+    // Enriquecer items con datos de la DB por medio del Map
+    const enrichedItems = items.map(item => {
+      const product = productMap.get(item.productId);
+      return {
+        productId: item.productId,
+        productName: product.name,
+        unitPrice: product.price,
+        quantity: item.quantity,
+        lineTotal: product.price * item.quantity
+      };
+    });
+
+    const subtotal = enrichedItems.reduce((sum, item) => sum + item.lineTotal, 0);
+    const discountAmount = (subtotal * discountPercent) / 100;
+    const total = subtotal - discountAmount;
+
     const newSale = await Sale.create({
       customerId: customerId || null,
       paymentMethod,
-      subTotal,
+      items: enrichedItems,
+      subTotal: subtotal,
       discountPercent,
       discountAmount,
       total
     });
 
-    // Se crea y hace la operación de los items de venta:
-    const saleItems = await Promise.all(
-      items.map(item => 
-        SaleItem.create({
-          saleId: newSale._id,
-          productId: item.productId,
-          productNameSnapshot: item.productName,
-          unitPriceSnapshot: item.unitPrice,
-          quantity: item.quantity,
-          lineTotal: item.unitPrice * item.quantity
-        })
-      )
-    );
-    await newSale.populate('customerId');
+    await createSaleItems(newSale._id, enrichedItems);
+
+    // Actualizar stock y contador de compras
+    await Promise.all([
+      ...items.map(item =>
+        Product.findByIdAndUpdate(item.productId, { $inc: { stock: -item.quantity } })
+      ),
+      customerId && customer
+        ? Client.findByIdAndUpdate(customerId, { $inc: { purchasesCount: 1 } })
+        : Promise.resolve()
+    ]);
+
+    const ticket = generateTicket(newSale, enrichedItems);
+
+    // Respuesta final
     res.status(201).json({
-      sale: newSale,
-      items: saleItems
+      saleId: newSale._id,
+      customerId: newSale.customerId,
+      paymentMethod: newSale.paymentMethod,
+      items: enrichedItems,
+      subtotal,
+      discountPercent,
+      discountAmount,
+      total,
+      ticket,
+      createdAt: newSale.createdAt
     });
-  }catch(error){
+
+  } catch (error) {
+    console.error('Error creating sale:', error);
     next(error);
   }
 }
