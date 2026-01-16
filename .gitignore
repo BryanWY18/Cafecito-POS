@@ -159,3 +159,7 @@ cypress/support/
 # System Files (ya tienes .DS_Store pero agregaría)
 **/.DS_Store
 Thumbs.db
+
+#Archivo de test con REST Client
+test/
+*.http
