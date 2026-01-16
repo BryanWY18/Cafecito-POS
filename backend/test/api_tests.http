@@ -97,18 +97,14 @@ Content-Type: application/json
   "paymentMethod": "cash",
   "items": [
     {
-      "productId": "6966ae6cf5bafa00cfcab098",
-      "quantity": 2
-    },
-    {
       "productId": "6966ae6cf5bafa00cfcab097",
-      "quantity": 1
+      "quantity": 8
     }
   ]
 }
 
 ### Petición GET/:id
-GET {{baseUrl}}/sales/6967fa90e2acfbb47e8e2219
+GET {{baseUrl}}/sales/6969a6b7810845842bc471ea
 
 ### Petición GET
 GET {{baseUrl}}/sales
