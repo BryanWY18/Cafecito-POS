@@ -1,21 +1,34 @@
 import Client from "../models/client.js";
 
+const checkUserExist = async (phoneOrEmail) => {
+  const client = await Client.findOne({ phoneOrEmail });
+  return client;
+}
+
 const getClients = async(req,res,next)=>{
   try{
-    const { name, page = 1, limit = 20 } = req.query;
-    const clients = await User.find(name)
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
-      .sort({ _id: -1 });
-       
-    const total = await Client.countDocuments(filter);
+    const page = parseInt(req.query.page) || 1;
+    console.log(page)
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-    res.status(200).json({
-      message: "Clients retrieved successfully",
+    const clients = await Client.find()
+      .skip(skip)
+      .limit(limit)
+      .sort({ name: 1 });
+
+    const totalResults = await Client.countDocuments();
+    const totalPages = Math.ceil(totalResults / limit);
+
+    res.json({
       clients,
-      totalPages: Math.ceil(total / limit),
-      currentPage: page,
-      total,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalResults,
+        hasNext: page < totalPages,
+        hasPrev: page > 1,
+      },
     });
   }catch(error){
     next(error);
@@ -24,15 +37,12 @@ const getClients = async(req,res,next)=>{
 
 const getClientById = async (req, res, next) => {
   try {
-    const { userId } = req.params;
-    const user = await Client.findById(userId).select("-hashPassword");
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const id = req.params.id;
+    const client = await Client.findById(id);
+    if (!client) {
+      return res.status(404).json({ message: "Product not found" });
     }
-    res.status(200).json({
-      message: "Client retrieved successfully",
-      user,
-    });
+    res.json(client);
   } catch (error) {
     next(error);
   }
