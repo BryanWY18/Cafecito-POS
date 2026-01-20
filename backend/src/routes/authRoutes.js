@@ -1,14 +1,13 @@
 import express from 'express';
 import {body} from 'express-validator';
 import {
-  register, 
   login, 
   checkEmailAlredyRegistered, 
   refreshToken } from '../controllers/authController.js';
 import validate from '../middlewares/validation.js';
 
 const router = express.Router();
-
+/*
 router.post('/register',
     [
       body('displayName')
@@ -27,6 +26,7 @@ router.post('/register',
         .optional()
         .isIn(['admin', 'seller']).withMessage('Role must to be admin,customer or guest'),
     ],validate,register);
+*/
 
 router.post('/login', [
   body('email')

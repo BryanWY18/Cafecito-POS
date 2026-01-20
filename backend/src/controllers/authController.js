@@ -14,19 +14,15 @@ const generateRefreshToken = (userId) => {
   return { token: refreshToken, userId };
 };
 
-const generatePassword = async (password) => {
-  const saltRounds = 10;
-  return await bcrypt.hash(password, saltRounds);
-}
-
 const checkUserExist = async (email) => {
   const user = await User.findOne({ email });
   return user;
 }
 
+/*
 async function register(req, res, next) {
   try {
-    const { displayName, email, password, phone } = req.body;
+    const { displayName, email, password } = req.body;
     const userExist = await checkUserExist(email);
     if (userExist) {
       return res.status(400).json({ message: 'User already exist' });
@@ -47,6 +43,7 @@ async function register(req, res, next) {
     next(error);
   }
 };
+*/
 
 async function login(req, res, next) {
   try {
@@ -97,4 +94,4 @@ const refreshToken = async (req, res, next) => {
   }
 };
 
-export { register, login, checkEmailAlredyRegistered, refreshToken };
+export { login, checkEmailAlredyRegistered, refreshToken };

@@ -160,6 +160,6 @@ cypress/support/
 **/.DS_Store
 Thumbs.db
 
-#Archivo de test con REST Client
+# REST Client tests (local only)
 test/
 *.http
