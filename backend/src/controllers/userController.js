@@ -1,5 +1,16 @@
 import bcrypt from "bcrypt";
 import User from "../models/user.js";
+import jwt from 'jsonwebtoken';
+
+const generatePassword = async (password) => {
+  const saltRounds = 10;
+  return await bcrypt.hash(password, saltRounds);
+}
+
+const checkUserExist = async (email) => {
+  const user = await User.findOne({ email });
+  return user;
+}
 
 // Obtener perfil del usuario autenticado
 const getUserProfile = async (req, res, next) => {
@@ -311,6 +322,29 @@ const searchUsers = async (req, res, next) => {
   }
 };
 
+async function createUser(req, res, next) {
+  try {
+    const { displayName, email, password } = req.body;
+    const userExist = await checkUserExist(email);
+    if (userExist) {
+      return res.status(400).json({ message: 'User already exist' });
+    }
+    let role = 'seller';
+    const hashPassword = await generatePassword(password);
+    const newUser = new User({
+      displayName,
+      email,
+      hashPassword,
+      role,
+    });
+    await newUser.save();
+    res.status(201).json({ displayName, email });
+  } catch (error) {
+    console.log(error)
+    next(error);
+  }
+};
+
 export {
   getUserProfile,
   getAllUsers,
@@ -321,5 +355,6 @@ export {
   deactivateUser,
   toggleUserStatus,
   deleteUser,
-  searchUsers
+  searchUsers,
+  createUser
 };

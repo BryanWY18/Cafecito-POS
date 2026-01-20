@@ -1,7 +1,6 @@
 import express from 'express';
 import {body} from 'express-validator';
 import {
-  register, 
   login, 
   checkEmailAlredyRegistered, 
   refreshToken } from '../controllers/authController.js';
