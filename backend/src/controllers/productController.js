@@ -27,6 +27,7 @@ async function getProducts(req, res) {
       },
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 }
