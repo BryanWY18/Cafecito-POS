@@ -15,7 +15,7 @@ export type ProductResponse = {
     currentPage: number;
     hasNext: boolean;
     hasPrev: boolean;
-    totalPages: number; 
+    totalPages: number;
     totalResults: number;
   };
 };

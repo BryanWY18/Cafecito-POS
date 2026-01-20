@@ -35,4 +35,5 @@ const profileValidations= [
 
 router.get('/profile',authMiddleware,getUserProfile);
 
+
 export default router;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../../environments/environment.development';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { Product, ProductResponse } from '../../types/Products';
+import { Product, ProductResponse, productSchema } from '../../types/Products';
 
 export type filters = {
   q?: string;
@@ -22,7 +22,16 @@ export class ProductsService {
   }
   
   getProductsById(id:string):Observable<Product>{
-    return this.httpClient.get<Product>(`${this.baseUrl}/${id}`);
+    return this.httpClient.get<Product>(`${this.baseUrl}/${id}`).pipe(
+      map((data:any)=>{
+        const response=productSchema.safeParse(data.product);
+        if(!response.success){
+          console.log(response.error)
+          throw new Error(`${response.error}`);
+        }
+        return response.data;
+      })
+    )
   };
 
   searchProducs(search:filters):Observable<Product[]>{
@@ -31,7 +40,7 @@ export class ProductsService {
       filters.q=search.q
     }
     const params = new HttpParams({fromObject:filters});
-    return this.httpClient.get<ProductResponse>(`${this.baseUrl}/`,{params})
+    return this.httpClient.get<ProductResponse>(`${this.baseUrl}`,{params})
       .pipe(map(response=>{
         return response.products || [];;
       })
