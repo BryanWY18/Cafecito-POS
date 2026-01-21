@@ -24,6 +24,7 @@ export class ProductsComponent implements OnInit {
   };
   
   constructor(private productService:ProductsService){}
+  
   ngOnInit(): void {
     this.getProducts();
   }
@@ -39,19 +40,19 @@ export class ProductsComponent implements OnInit {
     })
   };
 
-getInitials(productName: string): string {
-  if (!productName) return '';  
-  const words = productName.trim().split(' ');
-  if (words.length === 1) {
-    //Una sola palabra, toma primeras 2-3 letras
-    return productName.substring(0, 3).toUpperCase();
+  getInitials(productName: string): string {
+    if (!productName) return '';  
+    const words = productName.trim().split(' ');
+    if (words.length === 1) {
+      //Una sola palabra, toma primeras 2-3 letras
+      return productName.substring(0, 3).toUpperCase();
+    }
+    //Múltiples palabras, toma la primera letra de cada palabra (máximo 3)
+    return words
+      .slice(0, 3)
+      .map(word => word[0])
+      .join('')
+      .toUpperCase();
   }
-  //Múltiples palabras, toma la primera letra de cada palabra (máximo 3)
-  return words
-    .slice(0, 3)
-    .map(word => word[0])
-    .join('')
-    .toUpperCase();
-}
 
 }

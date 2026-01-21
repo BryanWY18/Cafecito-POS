@@ -1,16 +1,8 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
+import { LandingComponent } from './pages/landing/landing.component';
 
 export const routes: Routes = [
-  {path: '', component: HomeComponent, title: 'Cafecito_Feliz'},
-  {
-    path: 'products',
-    loadComponent:()=>
-      import('../app/pages/products/products.component').then(
-        (c)=> c.ProductsComponent
-      ),
-    title: 'Products',
-  },
+  {path: '', component: LandingComponent, title: 'Cafecito_Feliz'},
   {
     path: 'login',
     loadComponent:()=>
@@ -18,6 +10,22 @@ export const routes: Routes = [
         (c)=> c.LoginComponent
       ),
     title: 'Login',
+  },
+  {
+    path: 'dashboard',
+    loadComponent:()=>
+      import('../app/pages/main/main.component').then(
+        (c)=> c.MainComponent
+      ),
+    title: 'Dashboard',
+  },
+  {
+    path: 'registerCustomer',
+    loadComponent:()=>
+      import('../app/pages/register/register.component').then(
+        (c)=> c.RegisterComponent
+      ),
+    title: 'Register_Customer',
   },
   {
     path: 'customer',
@@ -30,8 +38,8 @@ export const routes: Routes = [
   {
     path: 'sale',
     loadComponent:()=>
-      import('../app/pages/ventas/ventas.component').then(
-        (c)=> c.VentasComponent
+      import('../app/pages/sale/sale.component').then(
+        (c)=> c.SaleComponent
       ),
     title: 'Sale',
   },
