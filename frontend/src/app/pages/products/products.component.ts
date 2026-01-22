@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProductsService } from '../../core/services/products/products.service';
 import { ProductResponse } from '../../core/types/Products'
 import { CurrencyPipe } from '@angular/common';
+import { SaleService } from '../../core/services/sale/sale.service';
 
 @Component({
   selector: 'app-products',
@@ -22,8 +23,9 @@ export class ProductsComponent implements OnInit {
       totalPages:0,
     }
   };
+
   
-  constructor(private productService:ProductsService){}
+  constructor(private productService:ProductsService, private saleService:SaleService){}
   
   ngOnInit(): void {
     this.getProducts();
@@ -32,7 +34,13 @@ export class ProductsComponent implements OnInit {
   getProducts(page:number=1, limit:number=10){
     this.productService.getProducts(page,limit).subscribe({
       next:(data)=>{
-        this.productResponse=data;
+        this.productResponse = {
+          ...data,
+          products: data.products.map(product => ({
+            ...product,
+            quantity: 0
+          }))
+        };
       },
       error:(error)=>{
         console.log(error);
@@ -54,5 +62,12 @@ export class ProductsComponent implements OnInit {
       .join('')
       .toUpperCase();
   }
+
+  addToSale() {
+      const productId = this.productResponse.products[0]._id;
+      const quantity = 1
+      //this.saleService.preSale(productId, quantity);
+  }
+
 
 }

@@ -2,7 +2,7 @@
   <div class="flex flex-1 overflow-hidden">
     <div class="flex-1 flex flex-col overflow-hidden">
       <div class="flex-1 overflow-y-auto bg-zinc-50 dark:bg-zinc-950">
-        <div class="flex flex-col">
+        <div class="">
           @for(product of productResponse.products; track product._id){
             <div class="flex items-center px-4 h-20 gap-4 bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
               <div class="flex items-center justify-center size-12 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-400 font-black text-xs">
@@ -12,12 +12,13 @@
                 <h3 class="text-lg font-black leading-none mb-1 dark:text-white">{{product.name}}</h3>
                 <p class="text-sm font-bold text-zinc-500">{{product.price | currency }}</p>
               </div>
-              <div
-                class="flex items-center bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white rounded-xl p-1 gap-4 px-3 h-12">
-                <button class="size-8 flex items-center justify-center font-black text-xl opacity-20">−</button>
-                <span class="font-black text-lg min-w-[20px] text-center">{{product.stock}}</span>
-                <button class="size-8 flex items-center justify-center font-black text-xl">+</button>
+              <div class="flex-1 text-center">
+                <h3 class="text-lg font-black leading-none mb-1 dark:text-white">Stock</h3>
+                <p class="text-sm font-bold text-zinc-500">{{product.stock }}</p>
               </div>
+              <button class="flex items-center justify-center w-20 h-10 rounded bg-zinc-100 dark:bg-green-600 text-black font-black text-xs cursor-pointer" (click)="addToSale()">
+                Añadir
+              </button>
             </div>
           }
         </div>
