@@ -1,26 +1,151 @@
-<div class="hidden lg:flex w-80 flex-col bg-zinc-100 dark:bg-zinc-900 border-l border-zinc-200 dark:border-zinc-800">
-  <div class="p-6">
-    <h2 class="text-xl font-black mb-1">Active Bill</h2>
-    <p class="text-xs font-bold text-zinc-500 uppercase tracking-tighter">Table 04 · 10:42 AM</p>
+<div class="lg:flex flex-col dark:bg-zinc-900 border-l  dark:border-zinc-800 h-full">
+  <div class="mt-5">
+    <h1 class="text-3xl font-bold text-white mb-8 text-center">
+      Sale Console
+    </h1>
   </div>
-  <div class="flex-1 px-6 overflow-y-auto space-y-4">
-    <div class="flex justify-between items-start">
-      <div class="space-y-1">
-        <p class="font-black text-sm">1x Oat Milk Latte</p>
-        <p class="text-[10px] font-bold text-zinc-400 uppercase">Size S, Oat Milk</p>
+  
+  <div class="py-4 mx-5 items-center justify-cente border-2 border-gray-400 rounded-2xl">
+    <div class="space-y-3">
+      <div class="text-center">
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+          ID del cliente
+        </label>
+        <input 
+          type="text"
+          [(ngModel)]="customerId"
+          class="w-80 px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100"
+          placeholder="Ingrese ID del cliente"
+        >
       </div>
-      <p class="font-black text-sm">$5.50</p>
+      <div class="text-center">
+        <span class="text-sm text-zinc-600 dark:text-zinc-400 py-2">¿Nuevo cliente?</span>
+        <p class="cursor-pointer text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium p-3" routerLink="/register">
+          Registrar
+        </p>
+      </div>
     </div>
   </div>
-  <div class="p-6 bg-white dark:bg-black border-t border-zinc-200 dark:border-zinc-800">
-    <div class="flex justify-between items-center mb-6">
-      <span class="font-bold text-zinc-500">Total Due</span>
-      <span class="text-3xl font-black">$5.95</span>
+
+    <div class="flex-1 px-4 overflow-y-auto">
+      @let sale = (sale$ | async); @if (sale && sale.items.length > 0) { 
+        <div class="space-y-4">
+          @for (item of sale.items; track item.productId._id) {
+            <div class="bg-white dark:bg-zinc-800 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+              <div class="flex flex-col">
+                <div class="relative w-full h-32 bg-gray-100 dark:bg-zinc-700 flex-shrink-0">
+                  <div class="w-full h-full flex items-center justify-center text-2xl font-bold text-gray-500 dark:text-gray-300">
+                    {{getInitials(item.productId.name)}}
+                  </div>
+                </div>  
+                
+                <div class="p-4">
+                  <div class="flex flex-col space-y-3">
+                    <div class="flex justify-between items-start">
+                      <h3 class="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 flex-1">
+                        {{ item.productId.name }}
+                      </h3>
+                      <span class="text-lg font-bold text-gray-900 dark:text-white ml-2">
+                        {{ item.productId.price | currency }}
+                      </span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Cantidad:</span>
+                      <div class="flex items-center border border-zinc-300 dark:border-zinc-600 rounded-lg">
+                        <button
+                          type="button"
+                          (click)="updateQuantity(item.productId._id, item.quantity - 1)"
+                          [disabled]="item.quantity <= 1"
+                          class="px-2 py-1 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                          −
+                        </button>
+                        <span class="px-3 py-1 border-x border-zinc-300 dark:border-zinc-600 text-sm font-medium">
+                          {{ item.quantity }}
+                        </span>
+                        <button
+                          type="button"
+                          (click)="updateQuantity(item.productId._id, item.quantity + 1)"
+                          [disabled]="item.quantity >= item.productId.stock"
+                          class="px-2 py-1 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div class="text-xs text-gray-500 dark:text-gray-400 text-right">
+                      Subtotal: {{ item.productId.price * item.quantity | currency }}
+                    </div>
+                    
+                    <button
+                      (click)="removeProduct(item.productId._id)"
+                      class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors duration-200 text-xs font-medium"
+                    >
+                      Cancelar Producto
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+
+          <div class="bg-white dark:bg-zinc-800 rounded-lg shadow-sm p-4 mt-6 sticky bottom-0">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                Resumen de la Orden
+              </h2>
+              <button
+                (click)="clearSale()"
+                class="text-red-600 hover:text-red-700 dark:text-red-400 text-xs font-medium"
+              >
+                Cancelar Pedido
+              </button>
+            </div>
+
+            <div class="space-y-2 text-sm mb-4">
+              <div class="flex justify-between text-gray-700 dark:text-gray-300">
+                <span>Productos ({{ totalProducts$ | async }})</span>
+                <span>{{ calculateSubtotal(sale) | currency }}</span>
+              </div>
+              <hr class="my-2 border-zinc-200 dark:border-zinc-700">
+              <div class="flex justify-between text-lg font-semibold text-gray-900 dark:text-white">
+                <span>Total</span>
+                <span>{{ calculateSubtotal(sale) | currency }}</span>
+              </div>
+            </div>
+            
+            <button
+              (click)="createSale()"
+              [disabled]="sale.items.length === 0"
+              class="w-full bg-zinc-900 dark:bg-green-600 hover:bg-zinc-800 dark:hover:bg-green-700 text-white py-4 rounded-xl font-bold text-lg uppercase active:scale-95 transition-transform flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+              Pagar
+            </button>
+          </div>
+        </div>
+      } @else {
+          <div class="flex flex-col items-center justify-center mt-30">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              fill="none" 
+              viewBox="0 0 24 24"
+              stroke-width="1.5" 
+              stroke="currentColor" 
+              class="w-30 h-30 text-gray-600">
+              <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+            </svg>
+            <p class="text-3xl font-bold text-gray-700 mb-4 text-center mt-8">
+              Sin pedidos
+            </p>
+          </div>
+      }
     </div>
-    <button
-      class="w-full bg-zinc-900 dark:bg-white text-white dark:text-black py-5 rounded-xl font-black text-xl uppercase active:scale-95 transition-transform flex items-center justify-center gap-3">
-      Pay Now
-      <span class="material-symbols-outlined font-black">arrow_forward</span>
-    </button>
-  </div>
 </div>

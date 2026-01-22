@@ -20,7 +20,7 @@ export const routes: Routes = [
     title: 'Dashboard',
   },
   {
-    path: 'registerCustomer',
+    path: 'register',
     loadComponent:()=>
       import('../app/pages/register/register.component').then(
         (c)=> c.RegisterComponent

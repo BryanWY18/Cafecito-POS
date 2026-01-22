@@ -14,6 +14,8 @@ export class MenuComponent implements OnInit{
   user: User | null=null;
   route = inject(ActivatedRoute);
 
+  downBarOpen: boolean = false;
+
   ngOnInit(): void {
     this.route.data.subscribe(data=>{
       console.log(data['user']);
