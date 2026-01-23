@@ -24,7 +24,6 @@ export class ProductsComponent implements OnInit {
     }
   };
 
-  
   constructor(private productService:ProductsService, private saleService:SaleService){}
   
   ngOnInit(): void {
@@ -63,10 +62,9 @@ export class ProductsComponent implements OnInit {
       .toUpperCase();
   }
 
-  addToSale() {
-      const productId = this.productResponse.products[0]._id;
-      const quantity = 1
-      //this.saleService.preSale(productId, quantity);
+  addToSale(productId:string) {
+    const quantity=1;
+    this.saleService.addProductToSale(productId, quantity);
   }
 
 
