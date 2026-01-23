@@ -4,7 +4,7 @@ import { productSchema } from './Products';
 
 // SCHEMA PARA CREAR VENTA (REQUEST al backend)
 export const createSaleRequestSchema = z.object({
-  customer: z.string(), // Solo ID
+  customer: z.string().optional(),
   items: z.array(z.object({
     productId: z.string(), // Solo ID
     quantity: z.number().min(1),
@@ -20,7 +20,7 @@ export const createSaleRequestSchema = z.object({
 // SCHEMA PARA LA VENTA (RESPONSE del backend)
 export const saleSchema = z.object({
   _id: z.string(),
-  customer: clientSchema,
+  customer: clientSchema.optional(),
   items: z.array(z.object({
     productId: productSchema,
     quantity: z.number().min(1),

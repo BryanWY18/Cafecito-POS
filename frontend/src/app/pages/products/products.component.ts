@@ -62,10 +62,8 @@ export class ProductsComponent implements OnInit {
       .toUpperCase();
   }
 
-  addToSale(productId:string) {
-    const quantity=1;
-    this.saleService.addProductToSale(productId, quantity);
+  addToSale(product:any) {
+    this.saleService.addProductToSale(product);
   }
-
 
 }
