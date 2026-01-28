@@ -26,19 +26,14 @@
       </div>
     </div>
   </div>
-
-    <div class="flex-1 px-4 overflow-y-auto">
-      @let sale = (sale$ | async); @if (sale && sale.items.length > 0) { 
+  
+    @if (sale$ | async; as sale){
+    <div class="flex-1 px-4 py-6 overflow-y-auto">
+        @if (sale.items.length > 0) {
         <div class="space-y-4">
-          @for (item of sale.items; track item.productId._id) {
+          @for (item of sale.items; track item._id) {
             <div class="bg-white dark:bg-zinc-800 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
               <div class="flex flex-col">
-                <div class="relative w-full h-32 bg-gray-100 dark:bg-zinc-700 flex-shrink-0">
-                  <div class="w-full h-full flex items-center justify-center text-2xl font-bold text-gray-500 dark:text-gray-300">
-                    {{getInitials(item.productId.name)}}
-                  </div>
-                </div>  
-                
                 <div class="p-4">
                   <div class="flex flex-col space-y-3">
                     <div class="flex justify-between items-start">
@@ -57,18 +52,18 @@
                           type="button"
                           (click)="updateQuantity(item.productId._id, item.quantity - 1)"
                           [disabled]="item.quantity <= 1"
-                          class="px-2 py-1 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                          class="px-2 py-1 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
                         >
                           −
                         </button>
-                        <span class="px-3 py-1 border-x border-zinc-300 dark:border-zinc-600 text-sm font-medium">
+                        <span class="px-3 py-1 border-x border-zinc-300 dark:border-zinc-600 text-sm font-medium text-gray-200">
                           {{ item.quantity }}
                         </span>
                         <button
                           type="button"
                           (click)="updateQuantity(item.productId._id, item.quantity + 1)"
                           [disabled]="item.quantity >= item.productId.stock"
-                          class="px-2 py-1 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                          class="px-2 py-1 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
                         >
                           +
                         </button>
@@ -81,7 +76,7 @@
                     
                     <button
                       (click)="removeProduct(item.productId._id)"
-                      class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors duration-200 text-xs font-medium"
+                      class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors duration-200 text-xs font-medium cursor-pointer"
                     >
                       Cancelar Producto
                     </button>
@@ -90,16 +85,15 @@
               </div>
             </div>
           }
-
+          
           <div class="bg-white dark:bg-zinc-800 rounded-lg shadow-sm p-4 mt-6 sticky bottom-0">
             <div class="flex justify-between items-center mb-4">
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 Resumen de la Orden
               </h2>
               <button
-                (click)="clearSale()"
-                class="text-red-600 hover:text-red-700 dark:text-red-400 text-xs font-medium"
-              >
+                (click)="cancelSale()"
+                class=" bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors duration-200 text-xs font-medium cursor-pointer">
                 Cancelar Pedido
               </button>
             </div>
@@ -118,7 +112,7 @@
             
             <button
               (click)="createSale()"
-              [disabled]="sale.items.length === 0"
+              [disabled]="!sale || sale.items.length === 0"
               class="w-full bg-zinc-900 dark:bg-green-600 hover:bg-zinc-800 dark:hover:bg-green-700 text-white py-4 rounded-xl font-bold text-lg uppercase active:scale-95 transition-transform flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -148,4 +142,5 @@
           </div>
       }
     </div>
+  }
 </div>

@@ -22,7 +22,19 @@ async function getSaleById(req, res) {
     if (!sale) {
       return res.status(404).json({error:'Sale not found', id:`${id}` });
     }
-    res.json(sale);
+    const ticket = generateTicket(sale, sale.items);
+    res.json({
+      saleId: sale._id,
+      customerId: sale.customerId,
+      paymentMethod: sale.paymentMethod,
+      items: sale.items,
+      subtotal: sale.subTotal,
+      discountPercent: sale.discountPercent,
+      discountAmount: sale.discountAmount,
+      total: sale.total,
+      ticket,
+      createdAt: sale.createdAt
+    });
   } catch (error) {
     console.log(error);
     next(error);
@@ -77,7 +89,8 @@ async function createSale(req, res, next) {
 
     // Crear mapa de productos
     const productMap = new Map(products.map(p => [p._id.toString(), p]));
-    // Validar stock
+    const stockErrors = [];
+    
     for (const item of items) {
       const product = productMap.get(item.productId);
       if (product.stock < item.quantity) {
@@ -87,7 +100,13 @@ async function createSale(req, res, next) {
         });
       }
     }
-    // Calcular descuento
+    if (stockErrors.length > 0) {
+      return res.status(422).json({
+        error: 'Insufficient stock',
+        stockErrors
+      });
+    }
+
     let discountPercent = 0;
     let customer = null;
     if (customerId) {
@@ -98,7 +117,6 @@ async function createSale(req, res, next) {
         else discountPercent = 15;
       }
     }
-    // Enriquecer items con datos de la DB por medio del Map
     const enrichedItems = items.map(item => {
       const product = productMap.get(item.productId);
       return {
@@ -126,7 +144,6 @@ async function createSale(req, res, next) {
 
     await createSaleItems(newSale._id, enrichedItems);
 
-    // Actualizar stock y contador de compras
     await Promise.all([
       ...items.map(item =>
         Product.findByIdAndUpdate(item.productId, { $inc: { stock: -item.quantity } })

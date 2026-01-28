@@ -1,14 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { SaleService } from '../../core/services/sale/sale.service';
 import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { Sale } from '../../core/types/Sale';
-import { RouterLink } from "@angular/router";
-
-export type preSale ={
-
-}
+import { Router, RouterLink } from "@angular/router";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-sale',
@@ -18,28 +15,20 @@ export type preSale ={
   styleUrl: './sale.component.css'
 })
 
-export class SaleComponent {
-  
-  constructor(private saleService:SaleService){}
+export class SaleComponent implements OnInit {
 
-  sale$!: Observable<Sale | null>;
+  sale$: Observable<Sale | null> = of(null);
+  totalProducts$: Observable<number> = of(0);
   customerId: string = '';
-  totalProducts$!: Observable<number>;
 
-  private saleSubject = new BehaviorSubject<Sale | null>(null);
- 
-  ngOnInit() {
-    this.sale$ = this.saleService.getCurrentSale();
-    this.sale$.subscribe(value => {
-      console.log('Sale$ emitió:', value);
-    });
+  constructor(private saleService: SaleService, private router:Router) {}
+
+  ngOnInit(): void {
+    this.sale$ = this.saleService.currentSale$;
     this.totalProducts$ = this.sale$.pipe(
-      map(sale => 
-      sale?.items?.reduce((total, item) => total + item.quantity, 0) || 0)
-    );  
-    this.loadCurrentSale();
+      map(sale => sale?.items?.reduce((total, item) => total + item.quantity, 0) || 0)
+    );
   }
-
   updateQuantity(productId: string, newQuantity: number) {
     this.saleService.updateQuantity(productId, newQuantity);
   }
@@ -48,57 +37,48 @@ export class SaleComponent {
     this.saleService.removeProduct(productId);
   }
 
-  clearSale() {
-    if (confirm('¿Estás seguro de cancelar toda la venta?')) {
-      this.saleService.cancelSale();
-      this.customerId = '';
-    }
-  }
-
-  createSale() {
-    if (!this.customerId) {
-      alert('Por favor ingresa el ID del cliente');
-      return;
-    }
-      this.saleService.completeSale(this.customerId).subscribe({
-      next: (sale) => {
-        console.log('Venta completada:', sale);
-        alert('¡Venta realizada con éxito!');
+  cancelSale() {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "Se borrarán todos los productos de la lista",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, borrar todo',
+      cancelButtonText: 'No, mantener'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.saleService.cancelSale();
         this.customerId = '';
-      },
-      error: (error) => {
-        console.error('Error al completar venta:', error);
-        alert('Error al completar la venta. Intenta de nuevo.');
+        Swal.fire('Eliminado', 'La venta ha sido cancelada', 'success');
       }
     });
   }
 
-  calculateSubtotal(sale: Sale): number {
-    return sale.items.reduce((sum, item) => 
-      sum + (item.productId.price * item.quantity), 0
-    );
+  createSale() {
+    Swal.fire({
+      title: '¿Confirmar compra?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Volver'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.saleService.completeSale(this.customerId).subscribe({
+          next: () => {
+        this.customerId = '';
+      },
+        error: (err) => alert('Error al completar la venta: ' + err.message)
+      });
+        this.saleService.cancelSale();
+        this.customerId = '';
+        Swal.fire('Venta completada', 'Generando ticket', 'success');
+        this.router.navigate(['/ticket']);
+      }
+    });
   }
 
-  getInitials(name: string): string {
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .substring(0, 2);
-  }
-
-
-  loadCurrentSale() {
-  // Asumiendo que tienes un servicio de ventas
-  this.saleService.getCurrentSale().subscribe({
-    next: (sale) => {
-      this.saleSubject.next(sale);
-    },
-    error: (error) => {
-      console.error('Error al cargar venta:', error);
-    }
-  });
+  calculateSubtotal(sale: Sale | null): number {
+    return this.saleService.calculateSubtotal(sale);
   }
 
 }
