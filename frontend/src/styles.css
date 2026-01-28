@@ -2,4 +2,8 @@
 
 @import "tailwindcss";
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { 
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  @apply bg-zinc-50 dark:bg-zinc-950;
+ }
