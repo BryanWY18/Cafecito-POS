@@ -4,7 +4,7 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { SaleService } from '../../core/services/sale/sale.service';
 import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { Sale } from '../../core/types/Sale';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import Swal from 'sweetalert2';
 
 @Component({
@@ -21,7 +21,7 @@ export class SaleComponent implements OnInit {
   totalProducts$: Observable<number> = of(0);
   customerId: string = '';
 
-  constructor(private saleService: SaleService) {}
+  constructor(private saleService: SaleService, private router:Router) {}
 
   ngOnInit(): void {
     this.sale$ = this.saleService.currentSale$;
@@ -37,7 +37,7 @@ export class SaleComponent implements OnInit {
     this.saleService.removeProduct(productId);
   }
 
-  clearSale() {
+  cancelSale() {
     Swal.fire({
       title: '¿Estás seguro?',
       text: "Se borrarán todos los productos de la lista",
@@ -55,12 +55,25 @@ export class SaleComponent implements OnInit {
   }
 
   createSale() {
-    this.saleService.completeSale(this.customerId).subscribe({
-      next: () => {
-        alert('Venta realizada con éxito!');
+    Swal.fire({
+      title: '¿Confirmar compra?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Volver'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.saleService.completeSale(this.customerId).subscribe({
+          next: () => {
         this.customerId = '';
       },
-      error: (err) => alert('Error al completar la venta: ' + err.message)
+        error: (err) => alert('Error al completar la venta: ' + err.message)
+      });
+        this.saleService.cancelSale();
+        this.customerId = '';
+        Swal.fire('Venta completada', 'Generando ticket', 'success');
+        this.router.navigate(['/ticket']);
+      }
     });
   }
 

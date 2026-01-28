@@ -1,1 +1,70 @@
-<p>ticket works!</p>
+<body class="bg-gray-800 min-h-screen flex items-center pl-50">
+  @if(ticketData?.ticket; as ticket){
+    <div class="bg-white w-80 shadow-lg">
+        <div class="text-center border-b-2 border-dashed border-gray-800 pb-4 pt-6 px-6">
+            <h1 class="text-2xl font-bold uppercase">{{ticket.storeName}}</h1>
+            <p class="text-xs mt-1 text-gray-600">¡Gracias por tu compra!</p>
+        </div>
+        
+        <div class="px-6 py-4 text-xs border-b border-dashed border-gray-400">
+            <div class="flex justify-between mb-1">
+                <span class="text-gray-600">Ticket:</span>
+                <span class="font-mono text-[10px]">{{ticket.saleId}}</span>
+            </div>
+            <div class="flex justify-between mb-1">
+                <span class="text-gray-600">Fecha:</span>
+                <span>{{ticket.timestamp}}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-600">Método de pago:</span>
+                <span class="uppercase font-semibold">{{ticket.paymentMethod}}</span>
+            </div>
+        </div>
+        @for(item of ticket.items; track item){
+          <div class="px-6 py-4">
+              <div class="mb-4">
+                  <div class="font-bold text-sm mb-1">{{item.name}}</div>
+                  <div class="flex justify-between text-xs text-gray-700">
+                      <span>{{item.qty}} x {{item.unitPrice | currency}}</span>
+                      <span class="font-semibold">{{item.lineTotal | currency}}</span>
+                  </div>
+              </div>
+          </div>
+        }
+
+        <div class="border-t border-dashed border-gray-400 mx-6"></div>
+        
+        <div class="px-6 py-4 text-sm">
+            <div class="flex justify-between mb-2">
+                <span>Subtotal:</span>
+                <span>{{ticket.subtotal | currency}}</span>
+            </div>
+            <div class="flex justify-between mb-2 text-green-600">
+                <span>Descuento ({{ticket.discount}}):</span>
+            </div>
+            <div class="flex justify-between text-lg font-bold pt-3 border-t-2 border-gray-800">
+                <span>TOTAL:</span>
+                <span>{{ticket.total}}</span>
+            </div>
+        </div>
+        
+        <div class="px-6 py-3 bg-gray-50 border-t border-dashed border-gray-400">
+            <div class="flex justify-between text-xs">
+                <span class="text-gray-600">Pagado con:</span>
+                <span class="font-semibold uppercase">{{ticket.paymentMethod}}</span>
+            </div>
+        </div>
+        
+        <div class="text-center py-4 px-6 border-t-2 border-dashed border-gray-800 text-xs text-gray-600">
+            <p class="mb-1">¡Vuelve pronto!</p>
+            <p class="text-[10px]">ID: {{ticket.saleId}}</p>
+            <p class="text-[10px] mt-1">Creado: {{ticket.timestamp}}</p>
+        </div>
+    </div>
+    <div class="ml-70">
+      <button class="w-70 bg-zinc-900 dark:bg-green-600 hover:bg-zinc-800 dark:hover:bg-green-700 text-white py-4 rounded-xl font-bold text-lg active:scale-95 transition-transform flex justify-center cursor-pointer" routerLink="/dashboard">
+        IMPRIMIR
+      </button>
+    </div>
+  }
+</body>

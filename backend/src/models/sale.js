@@ -1,37 +1,86 @@
 import mongoose from "mongoose";
 
 const saleSchema = new mongoose.Schema({
-  customerId:{
+  customerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Client',
-    default:null,
+    default: null,
   },
-  paymentMethod:{
+  paymentMethod: {
     type: String,
     required: true,
     enum: ['cash', 'card', 'transfer'],
     default: 'cash'
   },
-  subTotal:{
+  items: [
+    {
+      productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+        required: true
+      },
+      productName: {
+        type: String,
+        required: true
+      },
+      quantity: {
+        type: Number,
+        required: true
+      },
+      unitPrice: {
+        type: Number,
+        required: true
+      },
+      lineTotal: {
+        type: Number,
+        required: true
+      }
+    }
+  ],
+  subTotal: {
     type: Number,
-    required:true,
+    required: true,
   },
-  discountPercent:{
+  discountPercent: {
     type: Number,
     default: 0
   },
-  discountAmount:{
-    type:Number,
+  discountAmount: {
+    type: Number,
     default: 0
   },
-  total:{
+  total: {
     type: Number,
-    required:true,
+    required: true,
   },
-},{
-  timestamps:true,
-}
-);
+  ticket: {
+    saleId: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
+    storeName: {
+      type: String,
+      default: "Cafecito Feliz"
+    },
+    items: [
+      {
+        name: {
+          type: String
+        },
+        qty: {
+          type: Number
+        },
+        unitPrice: {
+          type: Number
+        },
+        lineTotal: {
+          type: Number
+        },
+      }
+    ]
+  },
+}, {
+  timestamps: true,
+});
 
 const Sale = mongoose.model('Sale', saleSchema);
 

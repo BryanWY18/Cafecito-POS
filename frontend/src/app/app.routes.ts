@@ -36,10 +36,10 @@ export const routes: Routes = [
     title: 'Customer',
   },
   {
-    path: 'sale',
+    path: 'ticket',
     loadComponent:()=>
-      import('../app/pages/sale/sale.component').then(
-        (c)=> c.SaleComponent
+      import('../app/pages/ticket/ticket.component').then(
+        (c)=> c.TicketComponent
       ),
     title: 'Sale',
   },
