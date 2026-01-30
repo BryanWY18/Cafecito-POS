@@ -40,7 +40,7 @@ export class ClientService {
   createCustomer(clientData:any):Observable<Client>{
     return this.httpClient.post<Client>(this.baseUrl, clientData).pipe(
       map((data:any)=>{
-        const response=clientSchema.safeParse(data.client);
+        const response=clientSchema.safeParse(data);
         if(!response.success){
           console.log(response.error)
           throw new Error(`${response.error}`);

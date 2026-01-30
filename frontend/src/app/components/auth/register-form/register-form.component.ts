@@ -31,7 +31,7 @@ export class RegisterFormComponent {
   fields = [
     {
       label: 'Nombre del cliente',
-      fieldId: 'displayName',
+      fieldId: 'name',
       type: 'text',
       placeholder: 'Nombre',
       required: true, 
@@ -48,7 +48,7 @@ export class RegisterFormComponent {
   constructor(private authService: AuthService, private clientService:ClientService) {
     this.registerForm = this.fb.group(
       {
-        displayName: ['', [Validators.required]],
+        name: ['', [Validators.required]],
         phoneOrEmail: ['',[Validators.required],[this.phoneOrEmailValidator()]],
       },
     );

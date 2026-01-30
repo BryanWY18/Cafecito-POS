@@ -4,7 +4,7 @@ export const clientSchema = z.object({
   _id: z.string(),
   name:z.string(),
   phoneOrEmail: z.string(),
-  purchasesCount: z.number().positive(),
+  purchasesCount: z.number().nonnegative(),
   isActive: z.boolean()
 });
 
