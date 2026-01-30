@@ -2,8 +2,10 @@ import express from 'express';
 import {body} from 'express-validator';
 import {
   login, 
-  checkEmailAlredyRegistered, 
-  refreshToken } from '../controllers/authController.js';
+  checkEmailAlredyRegistered,
+  checkClientAlreadyRegistered,
+  refreshToken 
+      } from '../controllers/authController.js';
 import validate from '../middlewares/validation.js';
 
 const router = express.Router();
@@ -40,5 +42,7 @@ router.post('/login', [
 router.get('/check-email', checkEmailAlredyRegistered);
 
 router.post('/refresh-token', refreshToken);
+
+router.get('/check-client', checkClientAlreadyRegistered);
 
 export default router;

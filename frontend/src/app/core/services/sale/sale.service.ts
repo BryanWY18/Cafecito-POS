@@ -86,13 +86,11 @@ export class SaleService {
       discountAmount: 0,
       total: this.calculateSubtotal(currentSale)
     }
-    console.log(JSON.stringify(saleData))
     return this.http.post<Sale>(this.baseUrl, saleData).pipe(
     switchMap(res => {
         return this.http.get<Sale>(`${this.baseUrl}/${res.saleId}`)
       }),
       tap((ticketCompleto) =>{
-        console.log(ticketCompleto)
         this.ticketResultSubject.next(ticketCompleto);
         this.cancelSale();
       })
