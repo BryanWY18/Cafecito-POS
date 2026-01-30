@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.js';
+import Client from '../models/client.js';
 
 const generateToken = (userId, displayName, role) => {
   return jwt.sign({ userId, displayName, role },
@@ -77,6 +78,17 @@ const checkEmailAlredyRegistered = async (req, res, next) => {
   }
 };
 
+const checkClientAlreadyRegistered= async (req,res,next)=>{
+  try{
+    const {phoneOrEmail} = req.query;
+    console.log(phoneOrEmail);
+    const client = await Client.findOne({phoneOrEmail});
+    res.status(200).json({ exists: !!client });  
+  }catch(error){
+    next(error)
+  }
+}
+
 const refreshToken = async (req, res, next) => {
   try {
     const { token } = req.body;
@@ -94,4 +106,9 @@ const refreshToken = async (req, res, next) => {
   }
 };
 
-export { login, checkEmailAlredyRegistered, refreshToken };
+export { 
+  login, 
+  checkEmailAlredyRegistered, 
+  checkClientAlreadyRegistered,
+  refreshToken, 
+};
