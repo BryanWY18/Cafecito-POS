@@ -11,7 +11,7 @@ import { FormFieldComponent } from '../../shared/form-field/form-field.component
 @Component({
   selector: 'app-login-form',
   standalone: true,
-  imports: [FormFieldComponent, ReactiveFormsModule],
+  imports: [FormFieldComponent, ReactiveFormsModule, RouterLink],
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.css'
 })
