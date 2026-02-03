@@ -29,8 +29,8 @@
       </div>
       <div class="text-center">
         <span class="text-sm text-zinc-600 dark:text-zinc-400 py-2">¿Nuevo cliente?</span>
-        <button class="cursor-pointer mx-37 text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium p-3"
-         routerLink="/register">
+        <button class="cursor-pointer mx-37 text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium p-3 disabled:cursor-not-allowed disabled:text-gray-400"
+        [disabled]="customerId" routerLink="/register">
           Registrar
         </button>
       </div>

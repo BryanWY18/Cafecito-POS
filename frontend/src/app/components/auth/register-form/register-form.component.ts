@@ -14,7 +14,6 @@ import { catchError, debounceTime, map, Observable, of, switchMap, timer } from 
 import { FormFieldComponent } from '../../shared/form-field/form-field.component';
 import { Router, RouterLink } from "@angular/router";
 import { ClientService } from '../../../core/services/client/client.service';
-import { SaleComponent } from '../../../pages/sale/sale.component';
 
 @Component({
   selector: 'app-register-form',
@@ -50,7 +49,6 @@ export class RegisterFormComponent {
     private authService: AuthService, 
     private clientService:ClientService, 
     private router:Router, 
-    private saleComponent:SaleComponent
   ) {
     this.registerForm = this.fb.group(
       {
@@ -153,11 +151,8 @@ phoneOrEmailValidator(): AsyncValidatorFn {
       console.log(this.registerForm.value);
       this.clientService.createCustomer(this.registerForm.value).subscribe({
         next: (response) => {
-          console.log('Cliente creado:', response);
           this.isSubmited = true;
-          this.saleComponent.customerId = response._id;
-          this.saleComponent.phoneOrEmail = response.name;
-          console.log(`El cliente registrado es: ${response.name}`)
+          this.clientService.setSharedClient(response);
           this.registerForm.reset();
           this.router.navigate(['/dashboard']);
         },

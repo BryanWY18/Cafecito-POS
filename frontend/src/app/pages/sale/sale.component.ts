@@ -31,6 +31,15 @@ export class SaleComponent implements OnInit, OnDestroy {
     this.totalProducts$ = this.sale$.pipe(
       map(sale => sale?.items?.reduce((total, item) => total + item.quantity, 0) || 0)
     );
+    this.clientService.selectedClient$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(client => {
+      if (client) {
+        this.customerId = client._id;
+        this.phoneOrEmail = client.name;
+        this.clientService.clearSharedClient();
+      }
+    });
   }
   
   updateQuantity(productId: string, newQuantity: number) {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, map, throwError } from 'rxjs';
 import { Client, clientSchema, clientArraySchema } from '../../types/Client';
 
 @Injectable({
@@ -10,6 +10,17 @@ import { Client, clientSchema, clientArraySchema } from '../../types/Client';
 export class ClientService {
   private baseUrl=`${environment.BACK_URL}/customers`
   constructor(private httpClient:HttpClient) { }
+
+  private selectedClientSubject = new BehaviorSubject<any>(null);
+  selectedClient$ = this.selectedClientSubject.asObservable();
+
+  setSharedClient(client: any) {
+    this.selectedClientSubject.next(client);
+  }
+
+  clearSharedClient() {
+    this.selectedClientSubject.next(null);
+  }
 
   getCustomers():Observable<Client[]>{
     return this.httpClient.get<Client[]>(`${this.baseUrl}`).pipe(
