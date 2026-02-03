@@ -4,12 +4,14 @@ import {
     getClients,
     getClientById,
     registerClient,
+    getClientByPhone
 } from '../controllers/clientController.js';  
 import validate from '../middlewares/validation.js';
 
 const router = express.Router();
 
 router.get('/customers',getClients);
+router.get('/customers/find',getClientByPhone)
 router.get('/customers/:id',getClientById);
 router.post('/customers',[
   body("name")

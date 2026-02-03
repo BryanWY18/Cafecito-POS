@@ -13,14 +13,17 @@
         </label>
         <input 
           type="text"
-          [(ngModel)]="customerId"
+          [(ngModel)]="phoneOrEmail"
           class="w-80 px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100"
           placeholder="Ingrese ID del cliente"
         >
+        <button class=" bg-blue-600 text-white mt-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200 text-xs font-medium cursor-pointer disabled:text-gray-400 disabled:bg-gray-500 disabled:cursor-not-allowed" [disabled]="phoneOrEmail===''" (click)="findCustomer()">
+          Buscar
+        </button>
       </div>
       <div class="text-center">
         <span class="text-sm text-zinc-600 dark:text-zinc-400 py-2">¿Nuevo cliente?</span>
-        <p class="cursor-pointer text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium p-3" routerLink="/register">
+        <p class="cursor-pointer mx-37 text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium p-3" routerLink="/register">
           Registrar
         </p>
       </div>

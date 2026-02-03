@@ -5,7 +5,7 @@ import { tick } from '@angular/core/testing';
 
 // SCHEMA PARA CREAR VENTA (REQUEST al backend)
 export const createSaleRequestSchema = z.object({
-  customer: z.string().optional().nullable(),
+  customerId: z.string().optional().nullable(),
   items: z.array(z.object({
     productId: z.string(), // Solo ID
     quantity: z.number().min(1),
