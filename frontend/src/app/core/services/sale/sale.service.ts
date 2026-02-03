@@ -28,7 +28,7 @@ export class SaleService {
     const newItem = {
       productId: product,
       quantity: 1,
-      price: product.price
+      unitPrice: product.price
     };
     if (!currentSale) {
       this.currentSaleSubject.next({ items: [newItem] } as any);
@@ -72,9 +72,10 @@ export class SaleService {
   completeSale(customerId: string | null): Observable<Sale> {
     const currentSale = this.currentSaleSubject.value;
     if (!currentSale) return throwError(() => new Error('No hay venta activa'));
+      const validCustomerId = customerId && customerId.trim() !== '' ? customerId : null;
 
     const saleData: CreateSaleRequest = {
-      customer: customerId || null,
+      customerId: validCustomerId,
       items: currentSale.items.map(item => ({
         productId: (item.productId as any)._id,
         quantity: item.quantity,
@@ -88,6 +89,7 @@ export class SaleService {
     }
     return this.http.post<Sale>(this.baseUrl, saleData).pipe(
     switchMap(res => {
+        console.log(`Service clientId: ${customerId}`)
         return this.http.get<Sale>(`${this.baseUrl}/${res.saleId}`)
       }),
       tap((ticketCompleto) =>{

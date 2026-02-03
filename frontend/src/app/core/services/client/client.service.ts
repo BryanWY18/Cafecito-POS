@@ -37,6 +37,19 @@ export class ClientService {
     )
   };
 
+  getClientId(phoneOrEmail:string):Observable<Client>{
+    return this.httpClient.get<Client>(`${this.baseUrl}/find`, {params: {phoneOrEmail}}).pipe(
+      map(data => {
+      const response = clientSchema.safeParse(data); 
+      if (!response.success) {
+        console.error('Error de validación:', response.error);
+        throw new Error('La respuesta de la API no es válida');
+      }
+      return response.data;
+    })
+    );
+  }
+
   createCustomer(clientData:any):Observable<Client>{
     return this.httpClient.post<Client>(this.baseUrl, clientData).pipe(
       map((data:any)=>{

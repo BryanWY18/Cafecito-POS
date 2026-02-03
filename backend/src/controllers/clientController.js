@@ -40,13 +40,26 @@ const getClientById = async (req, res, next) => {
     const id = req.params.id;
     const client = await Client.findById(id);
     if (!client) {
-      return res.status(404).json({ message: "Product not found" });
+      return res.status(404).json({ message: "Client not found" });
     }
     res.json(client);
   } catch (error) {
     next(error);
   }
 };
+
+const getClientByPhone = async (req,res,next)=>{
+  try{
+    const {phoneOrEmail} = req.query;
+    const client = await Client.findOne({phoneOrEmail});
+    if (!client) {
+      return res.status(404).json({ message: "Client not found" });
+    }
+    res.json(client);
+  }catch(error){
+    next(error);
+  }
+}
 
 async function registerClient(req, res, next) {
   try {
@@ -67,5 +80,5 @@ async function registerClient(req, res, next) {
 };
 
 export{
-  getClients,getClientById,registerClient,
+  getClients,getClientById,registerClient,getClientByPhone
 };
