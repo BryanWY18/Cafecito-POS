@@ -12,7 +12,7 @@ import {
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { catchError, debounceTime, map, Observable, of, switchMap, timer } from 'rxjs';
 import { FormFieldComponent } from '../../shared/form-field/form-field.component';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { ClientService } from '../../../core/services/client/client.service';
 
 @Component({
@@ -45,7 +45,11 @@ export class RegisterFormComponent {
     },
   ];
 
-  constructor(private authService: AuthService, private clientService:ClientService) {
+  constructor(
+    private authService: AuthService, 
+    private clientService:ClientService, 
+    private router:Router, 
+  ) {
     this.registerForm = this.fb.group(
       {
         name: ['', [Validators.required]],
@@ -73,7 +77,6 @@ phoneOrEmailValidator(): AsyncValidatorFn {
         } 
       });
     }
-    console.log('Verificando:', value);
     return this.authService.checkClientExist(value).pipe(
       debounceTime(500),
       switchMap((exist) => {
@@ -148,9 +151,10 @@ phoneOrEmailValidator(): AsyncValidatorFn {
       console.log(this.registerForm.value);
       this.clientService.createCustomer(this.registerForm.value).subscribe({
         next: (response) => {
-          console.log('Cliente creado:', response);
           this.isSubmited = true;
+          this.clientService.setSharedClient(response);
           this.registerForm.reset();
+          this.router.navigate(['/dashboard']);
         },
         error: (error) => {
           console.error('Error al crear cliente:', error);

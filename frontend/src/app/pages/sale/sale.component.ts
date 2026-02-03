@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { SaleService } from '../../core/services/sale/sale.service';
@@ -31,6 +31,15 @@ export class SaleComponent implements OnInit, OnDestroy {
     this.totalProducts$ = this.sale$.pipe(
       map(sale => sale?.items?.reduce((total, item) => total + item.quantity, 0) || 0)
     );
+    this.clientService.selectedClient$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(client => {
+      if (client) {
+        this.customerId = client._id;
+        this.phoneOrEmail = client.name;
+        this.clientService.clearSharedClient();
+      }
+    });
   }
   
   updateQuantity(productId: string, newQuantity: number) {
@@ -56,7 +65,8 @@ export class SaleComponent implements OnInit, OnDestroy {
         }).then((result)=>{
           if(result.isConfirmed){
             this.customerId = response._id;
-            this.phoneOrEmail = '';
+            this.phoneOrEmail = response.name;
+            console.log(`El client es: ${response.name}`)
           }
         });
       },
@@ -66,6 +76,13 @@ export class SaleComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  cancelCustomer(){
+    this.customerId="";
+    this.phoneOrEmail="";
+    console.log(`El cliente se canceló, ahora es: ${this.customerId}`)
+  };
+
 
   cancelSale() {
     Swal.fire({
