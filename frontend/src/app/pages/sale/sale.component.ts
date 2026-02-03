@@ -66,7 +66,6 @@ export class SaleComponent implements OnInit, OnDestroy {
           if(result.isConfirmed){
             this.customerId = response._id;
             this.phoneOrEmail = response.name;
-            console.log(`El client es: ${response.name}`)
           }
         });
       },
@@ -80,7 +79,6 @@ export class SaleComponent implements OnInit, OnDestroy {
   cancelCustomer(){
     this.customerId="";
     this.phoneOrEmail="";
-    console.log(`El cliente se canceló, ahora es: ${this.customerId}`)
   };
 
 
@@ -112,7 +110,6 @@ export class SaleComponent implements OnInit, OnDestroy {
       if (result.isConfirmed) {
         this.saleService.completeSale(this.customerId).subscribe({
           next: () => { 
-            console.log(`Keep client: ${this.customerId}`)
             this.saleService.cancelSale();
             this.customerId = '';
             Swal.fire('Venta completada', 'Generando ticket', 'success');

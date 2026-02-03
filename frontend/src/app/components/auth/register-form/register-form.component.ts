@@ -93,8 +93,6 @@ phoneOrEmailValidator(): AsyncValidatorFn {
   phoneValidator(): ValidatorFn {
     return (formControl: AbstractControl): ValidationErrors | null => {
       const phoneValue = formControl.value;
-      console.log(phoneValue.length);
-      console.log(Number.isNaN(+phoneValue));
       if (phoneValue.length !== 10 || Number.isNaN(+phoneValue)) {
         return { invalid_phone: true };
       }
@@ -107,7 +105,6 @@ phoneOrEmailValidator(): AsyncValidatorFn {
       if (!control.value) {
         return of(null);
       }
-      console.log(control.value);
       return this.authService.checkEmailExist(control.value).pipe(
         debounceTime(500),
         switchMap((exist) => (exist ? of({ emailTaken: true }) : of(null))),
@@ -148,7 +145,6 @@ phoneOrEmailValidator(): AsyncValidatorFn {
 
   handleSubmit() {
     if (this.registerForm.valid) {
-      console.log(this.registerForm.value);
       this.clientService.createCustomer(this.registerForm.value).subscribe({
         next: (response) => {
           this.isSubmited = true;
