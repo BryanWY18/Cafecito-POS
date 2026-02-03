@@ -1,6 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { User } from '../../core/types/User';
 import { ActivatedRoute } from '@angular/router';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-menu',

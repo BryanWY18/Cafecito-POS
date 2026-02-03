@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { SaleService } from '../../core/services/sale/sale.service';
@@ -56,7 +56,8 @@ export class SaleComponent implements OnInit, OnDestroy {
         }).then((result)=>{
           if(result.isConfirmed){
             this.customerId = response._id;
-            this.phoneOrEmail = '';
+            this.phoneOrEmail = response.name;
+            console.log(`El client es: ${response.name}`)
           }
         });
       },
@@ -66,6 +67,13 @@ export class SaleComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  cancelCustomer(){
+    this.customerId="";
+    this.phoneOrEmail="";
+    console.log(`El cliente se canceló, ahora es: ${this.customerId}`)
+  };
+
 
   cancelSale() {
     Swal.fire({
