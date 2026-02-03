@@ -5,7 +5,7 @@
             <h1 class="text-2xl font-bold uppercase">{{ticket.storeName}}</h1>
             <p class="text-xs mt-1 text-gray-600">¡Gracias por tu compra!</p>
         </div>
-
+        
         <div class="px-6 py-4 text-xs border-b border-dashed border-gray-400">
             <div class="flex justify-between mb-1">
                 <span class="text-gray-600">Ticket:</span>
@@ -15,16 +15,6 @@
                 <span class="text-gray-600">Fecha:</span>
                 <span>{{ticket.timestamp}}</span>
             </div>
-        @if(ticketData?.customerId != null){
-            <div class="flex justify-between mb-1">
-                <span class="text-gray-600">Cliente:</span>
-                <span>{{ticketData?.customerId?.name}}</span>
-            </div>
-            <div class="flex justify-between mb-1">
-                <span class="text-gray-600">Visitas:</span>
-                <span>{{ticketData?.customerId?.purchasesCount}}</span>
-            </div>
-        }
             <div class="flex justify-between">
                 <span class="text-gray-600">Método de pago:</span>
                 <span class="uppercase font-semibold">{{ticket.paymentMethod}}</span>
@@ -54,7 +44,7 @@
             </div>
             <div class="flex justify-between text-lg font-bold pt-3 border-t-2 border-gray-800">
                 <span>TOTAL:</span>
-                <span>{{ticket.total | currency}}</span>
+                <span>{{ticket.total}}</span>
             </div>
         </div>
         
