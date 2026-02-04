@@ -138,7 +138,6 @@ export class RegisterFormComponent {
 
   handleSubmit() {
     if (this.registerForm.valid) {
-      console.log(this.registerForm.value);
       this.clientService.createCustomer(this.registerForm.value).subscribe({
         next: (response) => {
           this.isSubmited = true;
