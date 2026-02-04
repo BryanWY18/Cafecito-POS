@@ -63,7 +63,7 @@ export class SaleComponent implements OnInit, OnDestroy {
         }).then((result)=>{
           if(result.isConfirmed){
             this.customerId = response._id;
-            this.phoneOrEmail = '';
+            this.phoneOrEmail = response.name;
           }
         });
       },
@@ -72,6 +72,11 @@ export class SaleComponent implements OnInit, OnDestroy {
         Swal.fire('Error', 'No se encontró el cliente', 'error');
       }
     });
+  }
+
+  cancelCustomer(){
+    this.customerId='';
+    this.phoneOrEmail='';
   }
 
   cancelSale() {
@@ -102,7 +107,6 @@ export class SaleComponent implements OnInit, OnDestroy {
       if (result.isConfirmed) {
         this.saleService.completeSale(this.customerId).subscribe({
           next: () => { 
-            console.log(`Keep client: ${this.customerId}`)
             this.saleService.cancelSale();
             this.customerId = '';
             Swal.fire('Venta completada', 'Generando ticket', 'success');

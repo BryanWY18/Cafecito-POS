@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { clientSchema } from './Client';
 import { productSchema } from './Products';
-import { tick } from '@angular/core/testing';
 
 // SCHEMA PARA CREAR VENTA (REQUEST al backend)
 export const createSaleRequestSchema = z.object({

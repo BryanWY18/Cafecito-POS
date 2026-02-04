@@ -49,9 +49,11 @@
                 <span>Subtotal:</span>
                 <span>{{ticket.subtotal | currency}}</span>
             </div>
+          @if(ticketData?.customerId){
             <div class="flex justify-between mb-2 text-green-600">
-                <span>Descuento ({{ticket.discount}}):</span>
+                <span>Descuento - {{ticket.discount}}:</span>
             </div>
+          }
             <div class="flex justify-between text-lg font-bold pt-3 border-t-2 border-gray-800">
                 <span>TOTAL:</span>
                 <span>{{ticket.total | currency}}</span>
