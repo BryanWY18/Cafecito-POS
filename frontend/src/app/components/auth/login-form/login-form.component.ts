@@ -4,7 +4,6 @@ import { FormErrorService } from '../../../core/services/validation/form-error.s
 import { Router, RouterLink } from '@angular/router';
 import { canComponentDeactivate } from '../../../core/guards/form/form.guards';
 import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
 import { FormFieldComponent } from '../../shared/form-field/form-field.component';
 
 
@@ -20,12 +19,13 @@ export class LoginFormComponent implements canComponentDeactivate{
   loginForm: FormGroup;
   isSubmited:boolean = false; 
 
-  constructor(private validation: FormErrorService, private readonly store: Store, private router:Router){
+  constructor(private validation: FormErrorService, private router:Router){
     this.loginForm = this.fb.group({
       email:['', [Validators.required, Validators.email]], 
       password:['', Validators.required]
     })
   }
+  
   canDeactivate() : Observable<boolean> | Promise<boolean> | boolean{
     if (this.loginForm.pristine || this.isSubmited) {
       return true;
@@ -42,7 +42,7 @@ export class LoginFormComponent implements canComponentDeactivate{
   }
 
   handleSubmit(){
-    //console.log(this.loginForm.value);
+    console.log(this.loginForm.value);
     // this.authService.login(this.loginForm.value);
     //this.store.dispatch(login({credentials:this.loginForm.value}))
     this.isSubmited = true;

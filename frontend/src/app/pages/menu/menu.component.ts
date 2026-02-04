@@ -1,6 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { User } from '../../core/types/User';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-menu',
@@ -16,11 +18,28 @@ export class MenuComponent implements OnInit{
 
   downBarOpen: boolean = false;
 
+  constructor(private router:Router){}
+
   ngOnInit(): void {
     this.route.data.subscribe(data=>{
       console.log(data['user']);
       this.user=data['user'];
     })
+  }
+
+  logout(){
+    Swal.fire({
+      title: '¿Cerrar Sesión?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Cerrar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire('Cerrando Sesión', 'success');
+        this.router.navigate(['/']);
+      }
+    });
   }
 
 }
