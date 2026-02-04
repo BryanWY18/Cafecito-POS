@@ -15,6 +15,16 @@
                 <span class="text-gray-600">Fecha:</span>
                 <span>{{ticket.timestamp}}</span>
             </div>
+         @if(ticketData?.customerId){
+           <div class="flex justify-between">
+               <span class="text-gray-600">Cliente:</span>
+               <span class="uppercase font-semibold">{{ticketData?.customerId?.name}}</span>
+           </div>
+           <div class="flex justify-between">
+               <span class="text-gray-600">Visitas:</span>
+               <span class="uppercase font-semibold">{{ticketData?.customerId?.purchasesCount}}</span>
+           </div>
+         }   
             <div class="flex justify-between">
                 <span class="text-gray-600">Método de pago:</span>
                 <span class="uppercase font-semibold">{{ticket.paymentMethod}}</span>
@@ -44,7 +54,7 @@
             </div>
             <div class="flex justify-between text-lg font-bold pt-3 border-t-2 border-gray-800">
                 <span>TOTAL:</span>
-                <span>{{ticket.total}}</span>
+                <span>{{ticket.total | currency}}</span>
             </div>
         </div>
         
