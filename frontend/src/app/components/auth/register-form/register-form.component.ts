@@ -54,44 +54,41 @@ export class RegisterFormComponent {
     );
   }
 
-phoneOrEmailValidator(): AsyncValidatorFn {
-  return (control: AbstractControl): Observable<ValidationErrors | null> => {
-    if (!control.value) {
-      return of(null);
-    }
-    const value = control.value.trim();
-    const emailRegex = /^\S+@\S+\.\S+$/;
-    const phoneRegex = /^\+\d{10,15}$/;
-
-    const isValidEmail = emailRegex.test(value);
-    const isValidPhone = phoneRegex.test(value);
-
-    if (!isValidEmail && !isValidPhone) {
-      return of({ 
-        invalidFormat: { 
-          message: 'Debe ser un email válido o un teléfono con formato +1234567890' 
-        } 
-      });
-    }
-    console.log('Verificando:', value);
-    return this.authService.checkClientExist(value).pipe(
-      debounceTime(500),
-      switchMap((exist) => {
-        if (exist) {
-          return of({ phoneOrEmailTaken: true });
-        }
+  phoneOrEmailValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      if (!control.value) {
         return of(null);
-      }),
-      catchError(() => of({ cantFetch: true }))
-    );
-  };
-}
+      }
+      const value = control.value.trim();
+      const emailRegex = /^\S+@\S+\.\S+$/;
+      const phoneRegex = /^\+\d{10,15}$/;
+
+      const isValidEmail = emailRegex.test(value);
+      const isValidPhone = phoneRegex.test(value);
+
+      if (!isValidEmail && !isValidPhone) {
+        return of({ 
+          invalidFormat: { 
+            message: 'Debe ser un email válido o un teléfono con formato +1234567890' 
+          } 
+        });
+      }
+      return timer(500).pipe(
+        switchMap(() => this.authService.checkClientExist(value)),
+        map((exist) => {
+          if (exist) {
+            return { phoneOrEmailTaken: true }; 
+          }
+          return null;
+        }),
+        catchError(() => of({ cantFetch: true }))
+      );
+    };
+  }
 
   phoneValidator(): ValidatorFn {
     return (formControl: AbstractControl): ValidationErrors | null => {
       const phoneValue = formControl.value;
-      console.log(phoneValue.length);
-      console.log(Number.isNaN(+phoneValue));
       if (phoneValue.length !== 10 || Number.isNaN(+phoneValue)) {
         return { invalid_phone: true };
       }
@@ -104,7 +101,6 @@ phoneOrEmailValidator(): AsyncValidatorFn {
       if (!control.value) {
         return of(null);
       }
-      console.log(control.value);
       return this.authService.checkEmailExist(control.value).pipe(
         debounceTime(500),
         switchMap((exist) => (exist ? of({ emailTaken: true }) : of(null))),
@@ -115,23 +111,20 @@ phoneOrEmailValidator(): AsyncValidatorFn {
 
   getErrorMessage(controlName: string): string {
     const control = this.registerForm.get(controlName);
-    if (!control || !control.touched) {
+    if (!control || !control.touched || !control.errors) {
       return '';
     }
     if (control.hasError('required')) {
       return 'Este campo es requerido';
     }
-    if (control.hasError('email')) {
-      return 'Email no valido';
+    if (control.hasError('invalidFormat')) {
+      return control.getError('invalidFormat').message;
     }
-    if (control.hasError('emailTaken')) {
-      return 'Este usuario ya existe';
+    if (control.hasError('phoneOrEmailTaken')) {
+      return 'Este correo o teléfono ya está registrado';
     }
     if (control.hasError('cantFetch')) {
-      return 'Error del servidor, intente en otro momento';
-    }
-    if (control.hasError('invalid_phone')) {
-      return 'Telefono no valido';
+      return 'Error de conexión con el servidor. Inténtalo más tarde.';
     }
     return '';
   }

@@ -30,10 +30,9 @@ export class AuthService {
 
   checkClientExist(phoneOrEmail:string):Observable<boolean>{
     return this.httpClient
-      .get<{exist:boolean}>(`${this.baseUrl}/auth/check-client`,{
+      .get<{exists:boolean}>(`${this.baseUrl}/auth/check-client`,{
         params:{phoneOrEmail},
       })
-      .pipe(map((res)=>res.exist));
-  }
-
+      .pipe(map((res)=> res.exists));
+  };
 }

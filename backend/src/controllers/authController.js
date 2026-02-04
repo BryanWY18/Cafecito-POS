@@ -81,7 +81,6 @@ const checkEmailAlredyRegistered = async (req, res, next) => {
 const checkClientAlreadyRegistered= async (req,res,next)=>{
   try{
     const {phoneOrEmail} = req.query;
-    console.log(phoneOrEmail);
     const client = await Client.findOne({phoneOrEmail});
     res.status(200).json({ exists: !!client });  
   }catch(error){
