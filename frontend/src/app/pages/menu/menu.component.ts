@@ -2,6 +2,9 @@ import { Component, inject, OnInit } from '@angular/core';
 import { User } from '../../core/types/User';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { UserService } from '../../core/services/user/user.service';
+import { Subject, takeUntil } from 'rxjs';
+import { AuthService } from '../../core/services/auth/auth.service';
 
 
 @Component({
@@ -13,18 +16,22 @@ import Swal from 'sweetalert2';
 })
 export class MenuComponent implements OnInit{
 
-  user: User | null=null;
   route = inject(ActivatedRoute);
+  barista:string='';
+  private destroy$ = new Subject<void>();
 
   downBarOpen: boolean = false;
 
-  constructor(private router:Router){}
+  constructor(private router:Router,private userService:UserService, private authService:AuthService){}
 
   ngOnInit(): void {
-    this.route.data.subscribe(data=>{
-      console.log(data['user']);
-      this.user=data['user'];
-    })
+    this.userService.selectedUser$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(userData => {
+        if (userData) {
+          this.barista = userData.displayName;
+        }
+      });
   }
 
   logout(){
@@ -37,9 +44,15 @@ export class MenuComponent implements OnInit{
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire('Cerrando Sesión', 'success');
+        this.authService.logOut();
         this.router.navigate(['/']);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }

@@ -6,7 +6,7 @@ import Client from '../models/client.js';
 const generateToken = (userId, displayName, role) => {
   return jwt.sign({ userId, displayName, role },
     process.env.JWT_SECRET,
-    { expiresIn: '1h' }
+    { expiresIn: '5h' }
   )
 }
 
@@ -51,7 +51,7 @@ async function login(req, res, next) {
     const { email, password } = req.body;
     const userExist = await checkUserExist(email);
     if (!userExist) {
-      return res.status(400).json({ message: 'User does not exist. You must to sign in' });
+      return res.status(400).json({ message: 'User does not exist. Check with the admin' });
     }
     console.log(userExist);
     const isMatch = await bcrypt.compare(password, userExist.hashPassword);
@@ -60,7 +60,7 @@ async function login(req, res, next) {
     }
     const token = generateToken(userExist._id, userExist.displayName, userExist.role);
     const refreshToken = generateRefreshToken(userExist._id);
-    res.status(200).json({ token, refreshToken:refreshToken.token });
+    res.status(200).json({ token, refreshToken:refreshToken.token,});
   } catch (error) {
     console.log(error);
     next(error);
@@ -81,7 +81,6 @@ const checkEmailAlredyRegistered = async (req, res, next) => {
 const checkClientAlreadyRegistered= async (req,res,next)=>{
   try{
     const {phoneOrEmail} = req.query;
-    console.log(phoneOrEmail);
     const client = await Client.findOne({phoneOrEmail});
     res.status(200).json({ exists: !!client });  
   }catch(error){
