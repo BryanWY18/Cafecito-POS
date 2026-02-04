@@ -60,14 +60,7 @@ async function login(req, res, next) {
     }
     const token = generateToken(userExist._id, userExist.displayName, userExist.role);
     const refreshToken = generateRefreshToken(userExist._id);
-    res.status(200).json({ 
-      token, 
-      refreshToken:refreshToken.token,
-      user:{
-        displayName: userExist.displayName,
-        role: userExist.role
-      }
-    });
+    res.status(200).json({ token, refreshToken:refreshToken.token,});
   } catch (error) {
     console.log(error);
     next(error);

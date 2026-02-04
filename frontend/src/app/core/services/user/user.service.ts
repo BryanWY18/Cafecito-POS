@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { User, UserCredentials } from '../../types/User';
 import { BehaviorSubject, map, Observable } from 'rxjs';
+import { decodedToken } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,18 +12,15 @@ export class UserService {
   private baseUrl=`${environment.BACK_URL}/auth`;
   constructor(private httpClient:HttpClient) { }
 
-  private selectedUserSubject = new BehaviorSubject<User | null>(null);
+  private selectedUserSubject = new BehaviorSubject<decodedToken | null>(null);
   selectedUser$ = this.selectedUserSubject.asObservable();
 
-  setSharedUser(user: User) {
+  setSharedUser(user: decodedToken) {
     this.selectedUserSubject.next(user);
   }
 
-  login(credentials: UserCredentials): Observable<{ token: string, user: User }> {
-    return this.httpClient.post<{ token: string, user: User }>(
-      `${this.baseUrl}/login`,
-      credentials
-    );
+  clearUser(): void {
+    this.selectedUserSubject.next(null);
   }
 
 }

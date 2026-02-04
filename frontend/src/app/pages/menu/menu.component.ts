@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { UserService } from '../../core/services/user/user.service';
 import { Subject, takeUntil } from 'rxjs';
+import { AuthService } from '../../core/services/auth/auth.service';
 
 
 @Component({
@@ -21,7 +22,7 @@ export class MenuComponent implements OnInit{
 
   downBarOpen: boolean = false;
 
-  constructor(private router:Router,private userService:UserService){}
+  constructor(private router:Router,private userService:UserService, private authService:AuthService){}
 
   ngOnInit(): void {
     this.userService.selectedUser$
@@ -43,6 +44,7 @@ export class MenuComponent implements OnInit{
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire('Cerrando Sesión', 'success');
+        this.authService.logOut();
         this.router.navigate(['/']);
       }
     });

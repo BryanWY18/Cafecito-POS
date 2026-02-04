@@ -19,3 +19,8 @@ export type UserForm = Pick<
   User,
   'email' | 'displayName'
 > & { password: string };
+
+export type LoginResponse = {
+  token: string;
+  refreshToken: string;
+};

@@ -58,11 +58,10 @@ export class LoginFormComponent implements canComponentDeactivate{
 
   handleSubmit(){
     if (this.loginForm.valid) {
-      this.userService.login(this.loginForm.value).subscribe({
-        next: (response) => {          
+      this.authService.login(this.loginForm.value).subscribe({
+        next:(response) => {
+          this.userService.setSharedUser(response)
           this.isSubmited = true;
-          localStorage.setItem('token', response.token);
-          this.userService.setSharedUser(response.user);
           this.loginForm.reset();
           this.router.navigate(['/dashboard']);
         },
