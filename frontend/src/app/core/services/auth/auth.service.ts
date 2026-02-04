@@ -22,10 +22,10 @@ export class AuthService {
 
   checkEmailExist(email:string):Observable<boolean>{
     return this.httpClient
-      .get<{exist:boolean}>(`${this.baseUrl}/auth/check-email`,{
+      .get<{exists:boolean}>(`${this.baseUrl}/auth/check-email`,{
         params:{email},
       })
-      .pipe(map((res)=>res.exist));
+      .pipe(map((res)=>res.exists));
   }
 
   checkClientExist(phoneOrEmail:string):Observable<boolean>{
