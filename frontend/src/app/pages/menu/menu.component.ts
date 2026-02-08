@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { User } from '../../core/types/User';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { UserService } from '../../core/services/user/user.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -10,13 +10,14 @@ import { AuthService } from '../../core/services/auth/auth.service';
 @Component({
   selector: 'app-menu',
   standalone:true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })
 export class MenuComponent implements OnInit{
 
   route = inject(ActivatedRoute);
+  role:string=''
   barista:string='';
   private destroy$ = new Subject<void>();
 
@@ -28,7 +29,11 @@ export class MenuComponent implements OnInit{
     this.userService.selectedUser$
       .pipe(takeUntil(this.destroy$))
       .subscribe(userData => {
-        if (userData) {
+        if (userData && userData.role==="seller") {
+          this.role = userData.role;
+          this.barista = userData.displayName;
+        }else if(userData && userData.role==="admin"){
+          this.role = userData.role;
           this.barista = userData.displayName;
         }
       });

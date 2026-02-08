@@ -1,58 +1,65 @@
-<div class="flex items-center bg-white dark:bg-zinc-900 px-4 py-3 border-b border-zinc-200 dark:border-zinc-800 shrink-0">
-  <div class="flex-1 flex items-center gap-3">
-    <span class="material-symbols-outlined text-zinc-400">Menu</span>
-    <h1 class="text-base font-extrabold tracking-tight uppercase">Cafecito Feliz</h1>
+<div class="flex items-center bg-green-500 px-4 py-3 border-b border-zinc-200 dark:border-zinc-700 shrink-0">
+  <div class="flex-1 items-center gap-3">
+    <span class="material-symbols-outlined text-black">Menu</span>
+    <h1 class="font-extrabold tracking-tight uppercase">Cafecito Feliz</h1>
   </div>
   <div class="flex items-center gap-4">
-    <div class="flex flex-col items-end">
-      <span class="text-[15px] font-bold text-white-500 uppercase">Barista</span>
-      <span class="text-xs font-bold uppercase">{{barista}}</span>
-      <button class="text-xs font-bold cursor-pointer text-blue-600 hover:text-blue-700 dark:text-blue-400  disabled:text-gray-400 disabled:cursor-not-allowed" (click)="logout()">LOGOUT</button>
-      
-      <!--
-      <button class="text-green-500 mb-4 mt-4 cursor-pointer" (click)="downBarOpen=!downBarOpen">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-        </svg>
-      </button>
-    </div>
-  </div>
-</div>
-@if(downBarOpen){
-  <div
-    class="fixed inset-0 bg-black/60 z-40 transition-opacity duration-300 backdrop-blur-sm"
-    (click)="downBarOpen = false"
-  ></div>
-
-
-<aside
-    [class]="downBarOpen ? 'translate-y-0' : 'translate-y-full'"
-    class="fixed top-0 left-0 w-80 bg-slate-800 shadow-2xl z-[100] transform transition-transform duration-300 ease-in-out flex flex-col border-l border-slate-600"
-  >
-    <div
-      class="flex items-center justify-between p-4 border-b border-slate-600 bg-slate-800"
-    >
-      <h2 class="text-lg font-semibold text-white">Menú</h2>
-      <button
-        class="p-2 rounded-full hover:bg-slate-700 text-white hover:text-gray-200 transition-colors duration-200"
+    @if(role==='seller'){
+      <div class="flex-col items-end">
+        <span class="text-[15px] font-bold text-white-500 ">Barista:</span>
+        <span class=" font-bold uppercase">{{barista}}</span>
+        <button class="text-xs font-bold cursor-pointer text-gray-600 hover:text-gray-700 dark:text-gray-400  disabled:text-gray-400 disabled:cursor-not-allowed" (click)="logout()">LOGOUT</button>
+      </div>
+    }@else {
+      <div class="flex-col gap-2 items-end">
+        <span class="text-[15px] font-bold text-white-500 pr-3">Admin:</span>
+        <span class=" font-bold uppercase">{{barista}}</span>
+        <div class="flex flex-col items-end">
+          <button class="text-xs font-bold cursor-pointer text-gray-600 hover:text-blue-900 dark:text-gray-800  disabled:text-gray-400 disabled:cursor-not-allowed bg-green-700 p-2 mb-2 rounded-3xl" (click)="logout()">LOGOUT</button>
+          <button class="text-xs font-bold cursor-pointer bg-green-700 p-2 rounded-2xl text-gray-600 hover:text-blue-900 dark:text-gray-800  disabled:text-gray-400 disabled:cursor-not-allowed" (click)="downBarOpen = !downBarOpen">Admin Menu</button>
+        </div>
+      </div>
+    <div class="relative z-[100]">
+      @if(downBarOpen){
+      <div
+        class="fixed inset-0 bg-black/60 z-40 transition-opacity duration-300 backdrop-blur-sm"
         (click)="downBarOpen = false"
+      ></div>
+      }
+
+      <aside
+        [class]="downBarOpen ? 'translate-x-0' : 'translate-x-full'"
+        class="fixed inset-y-0 right-0 w-80 bg-slate-800 shadow-2xl z-[100] transform transition-transform duration-300 ease-in-out flex flex-col border-l border-slate-600"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="w-5 h-5"
+        <div
+          class="flex items-center justify-between p-4 border-b border-slate-600 bg-slate-800"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6 18 18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
+          <h2 class="text-lg font-semibold text-white">Menú</h2>
+          <button
+            class="p-2 rounded-full hover:bg-slate-700 text-white hover:text-gray-200 transition-colors duration-200"
+            (click)="downBarOpen = false"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-5 h-5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="flex flex-col">
+          <button routerLink="admin/inventario">Inventario</button>
+          <button routerLink="/admin/register-employ">Registro Baristas</button>
+        </div>
+      </aside>
     </div>
-  </aside>
-}
-  -->
+    }
+  </div>

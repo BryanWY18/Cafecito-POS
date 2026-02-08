@@ -2,18 +2,22 @@ import { Routes } from "@angular/router";
 
 export const ADMIN_ROUTES: Routes= [
   {
-      path: 'register',
-      // loadComponent: ()=> import('./paymethods/paymethods.component').then(c=>c.PaymethodsComponent),
-      title: 'Register new User'
+    path: 'register-employ',
+    loadComponent: ()=> import('./register-user/register-user.component').then(
+      c=>c.RegisterUserComponent),
+    title: 'Register new User'
   }, 
   {
     path: 'inventario',
-      // loadComponent: ()=> import('./paymethods/paymethods.component').then(c=>c.PaymethodsComponent),
+    loadComponent: ()=> import('./inventory/inventory.component').then(
+      c=>c.InventoryComponent),
     title: 'Inventory'
-  }, 
+  },
+  /*
   {
     path: 'salesRegister',
-      // loadComponent: ()=> import('./paymethods/paymethods.component').then(c=>c.PaymethodsComponent),
+    loadComponent: ()=> import('./paymethods/paymethods.component').then(c=>c.PaymethodsComponent),
     title: 'Sales Register'
   },
+  */
 ]
