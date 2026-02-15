@@ -22,7 +22,6 @@ export class AuthService {
   private baseUrl=`${environment.BACK_URL}/auth`
 
   private readonly httpClient = inject(HttpClient);
-  private readonly router = inject(Router);
 
   checkEmailExist(email:string):Observable<boolean>{
     return this.httpClient
@@ -88,7 +87,6 @@ export class AuthService {
   logOut(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
-    this.router.navigate(['/login']);
   }
 
 }
