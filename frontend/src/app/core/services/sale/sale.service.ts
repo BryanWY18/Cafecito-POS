@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, catchError, map, Observable, of, throwError, tap, switchMap } from 'rxjs';
 import { CreateSaleRequest, Sale, saleSchema } from '../../types/Sale';

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import {jwtDecode} from 'jwt-decode';
 import { map, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import {environment} from '../../../../environments/environment.development';
+import {environment} from '../../../../environments/environment';
 import { boolean } from 'zod';
 import { LoginResponse, User, UserCredentials } from '../../types/User';
 

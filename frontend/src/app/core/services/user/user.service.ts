@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { User, UserCredentials } from '../../types/User';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { decodedToken } from '../auth/auth.service';

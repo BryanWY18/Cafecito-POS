@@ -1,0 +1,84 @@
+name: Deploy Cafecito-POS Fullstack
+
+on:
+  push:
+      branches: [main,develop]
+  pull_request:
+      branches: [main,develop]
+
+jobs:
+  # --- CONSTRUCCIÓN DEL BACKEND ---
+  build-and-push-back:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and Push Backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cafecito_pos-back:latest
+
+  # --- CONSTRUCCIÓN DEL FRONTEND (ANGULAR) ---
+  build-and-push-front:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and Push Frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cafecito-front:latest
+
+# --- DESPLIEGUE EN VPS ---
+  deploy:
+    needs: [build-and-push-back, build-and-push-front] # Espera a que ambos builds terminen con éxito
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            # 1. Actualizar imagen y reiniciar contenedor del BACKEND
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/cafecito_pos-back:latest
+            docker stop cafecito_pos-back || true && docker rm cafecito_pos-back || true
+            
+            # Ejecución con todas las variables de producción inyectadas
+            docker run -d --name cafecito_pos-back \
+              --network proxy_default \
+              -e PORT=3000 \
+              -e FRONT_APP_URL="https://cafecito-pos.bryandev.cloud" \
+              -e MONGODB_URI="${{ secrets.MONGODB_URI }}" \
+              -e MONGODB_DB="${{ secrets.MONGODB_DB }}" \
+              -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+              -e JWT_REFRESH_SECRET="${{ secrets.JWT_REFRESH_SECRET }}" \
+              -e INITIAL_DATA="production" \
+              ${{ secrets.DOCKERHUB_USERNAME }}/cafecito_pos-back:latest
+
+            # 2. Actualizar imagen y reiniciar contenedor del FRONTEND
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/cafecito-front:latest
+            docker stop cafecito-front || true && docker rm cafecito-front || true
+            
+            # Se une a la red de NPM y usa el nombre que configuraste en el panel
+            docker run -d --name cafecito-front \
+              --network nginx-proxy-network \
+              ${{ secrets.DOCKERHUB_USERNAME }}/cafecito-front:latest
+
+            # Limpieza opcional: Borra imágenes viejas que ya no se usan para no llenar el disco del VPS
+            docker image prune -f
