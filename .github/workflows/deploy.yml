@@ -71,13 +71,14 @@ jobs:
               -e INITIAL_DATA="production" \
               ${{ secrets.DOCKERHUB_USERNAME }}/cafecito_pos-back:latest
 
+
             # 2. Actualizar imagen y reiniciar contenedor del FRONTEND
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/cafecito-front:latest
             docker stop cafecito-front || true && docker rm cafecito-front || true
             
             # Se une a la red de NPM y usa el nombre que configuraste en el panel
             docker run -d --name cafecito-front \
-              --network nginx-proxy-network \
+              --network proxy_default \
               ${{ secrets.DOCKERHUB_USERNAME }}/cafecito-front:latest
 
             # Limpieza opcional: Borra imágenes viejas que ya no se usan para no llenar el disco del VPS
