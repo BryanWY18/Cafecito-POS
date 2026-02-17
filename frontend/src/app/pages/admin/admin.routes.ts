@@ -13,6 +13,12 @@ export const ADMIN_ROUTES: Routes= [
       c=>c.InventoryComponent),
     title: 'Inventory'
   },
+  {
+    path: 'usuarios',
+    loadComponent: ()=> import('./users/users.component').then(
+      c=>c.UsersComponent),
+    title: 'Users'
+  },
   /*
   {
     path: 'salesRegister',

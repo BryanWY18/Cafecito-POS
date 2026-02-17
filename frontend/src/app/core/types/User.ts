@@ -1,5 +1,13 @@
 import z from 'zod';
 
+export interface UsersResponse {
+  message: string;
+  users: User[];
+  totalPages: number;
+  currentPage: number;
+  total: number;
+}
+
 export const userSchema = z.object({
   _id: z.string(),
   displayName: z.string(),
