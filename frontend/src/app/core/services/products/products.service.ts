@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { Product, ProductResponse, productSchema } from '../../types/Products';
+import { CreateProductDto, Product, ProductResponse, productSchema } from '../../types/Products';
 
 export type filters = {
   q?: string;
@@ -50,6 +50,15 @@ export class ProductsService {
     )
   };
 
-  
+  createProduct(product: CreateProductDto): Observable<Product> {
+    return this.httpClient.post<Product>(`${this.baseUrl}`, product);
+  }
 
+  updateProduct(id:string, product: CreateProductDto): Observable<Product>{
+    return this.httpClient.put<Product>(`${this.baseUrl}/${id}`, product)
+  }
+
+  deleteProduct(id: string): Observable<Product> {
+    return this.httpClient.delete<Product>(`${this.baseUrl}/${id}`);
+  }
 }

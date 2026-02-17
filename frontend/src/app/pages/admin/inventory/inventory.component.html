@@ -1,32 +1,98 @@
-<div class="relative flex h-screen w-full flex-col overflow-hidden bg-zinc-50 dark:bg-zinc-800">
-  <div class="flex flex-1 overflow-hidden">
-    <div class="flex-1 flex flex-col overflow-hidden">
-      <div class="flex-1 overflow-y-auto">
-        <div class="">
-          @for(product of productResponse.products; track product._id){
-            <div class="flex items-center px-4 h-20 gap-4 bg-white dark:bg-zinc-800 border-b border-zinc-200 dark:border-black hover:bg-zinc-50 dark:hover:bg-zinc-700/50">
-              <div class="flex items-center justify-center size-12 rounded bg-zinc-100 dark:bg-zinc-900 text-zinc-400 font-black text-xs">
-                {{getInitials(product.name)}}
-              </div>
-              <div class="flex-1">
-                <h3 class="text-lg font-black leading-none mb-1 dark:text-white">{{product.name}}</h3>
-                <p class="text-sm font-bold text-zinc-400">{{product.price | currency }}</p>
-              </div>
-              <div class="flex-1 text-center mr-34">
+<div class="container mx-auto p-6 bg-gray-300">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Inventario de Productos</h2>
+    <div class="flex items-center gap-4 ">
+      <button class="cursor-pointer" routerLink="/dashboard" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="grid grid-cols-2">
+  <div class="relative flex h-screen w-full flex-col overflow-hidden bg-zinc-50 dark:bg-zinc-800">
+    <div class="flex flex-1 overflow-hidden">
+      <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 overflow-y-auto">
+          <div class="">
+            @for(product of productResponse.products; track product._id){
+              <div class="flex items-center px-4 h-20 gap-4 bg-white dark:bg-zinc-800 border-b border-zinc-200 dark:border-black hover:bg-zinc-50 dark:hover:bg-zinc-700/50">
+                <div class="flex items-center justify-center size-12 rounded bg-zinc-100 dark:bg-zinc-900 text-zinc-400 font-black text-xs">
+                  {{getInitials(product.name)}}
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-lg font-black leading-none mb-1 dark:text-white">{{product.name}}</h3>
+                  <p class="text-sm font-bold text-zinc-400">{{product.price | currency }}</p>
+                </div>
+                <div class="flex-1 text-center mr-34">
+                  @if(product.stock===0){
+                    <h3 class="text-lg font-black leading-none mb-1 dark:text-red-600">Stock</h3>
+                  }@else {
+                    <h3 class="text-lg font-black leading-none mb-1 dark:text-white">Stock</h3>
+                  }
+                  <p class="font-bold text-zinc-400">{{product.stock }}</p>
+                </div>
                 @if(product.stock===0){
-                  <h3 class="text-lg font-black leading-none mb-1 dark:text-red-600">Stock</h3>
+                  <button class="flex items-center justify-center w-20 h-10 rounded-2xl bg-zinc-100 dark:bg-red-500 hover:bg-red-600 text-black font-black text-xs disabled:cursor-not-allowed cursor-pointer" (click)="reStock(product._id)">
+                    Rebastecer
+                  </button>
                 }@else {
-                  <h3 class="text-lg font-black leading-none mb-1 dark:text-white">Stock</h3>
+                  <button class="flex items-center justify-center w-20 h-10 rounded-2xl bg-zinc-100 dark:bg-green-500 hover:bg-green-600 text-black font-black text-xs disabled:cursor-not-allowed cursor-pointer" (click)="reStock(product._id)">
+                    Actualizar
+                  </button>
                 }
-                <p class="font-bold text-zinc-400">{{product.stock }}</p>
+                <div>
+                  <button class="flex items-center justify-center w-20 h-10 rounded-2xl bg-zinc-100 dark:bg-red-500 hover:bg-red-600 text-black font-black text-xs disabled:cursor-not-allowed cursor-pointer" (click)="deleteProduct(product._id)">
+                    Eliminar
+                  </button>                  
+                </div>
               </div>
-              <button class="flex items-center justify-center w-20 h-10 rounded-2xl bg-zinc-100 dark:bg-green-500 hover:bg-green-600 text-black font-black text-xs disabled:cursor-not-allowed cursor-pointer"[disabled]="product.stock===0" (click)="addToSale(product)">
-                Añadir
-              </button>
-            </div>
-          }
+            }
+          </div>
         </div>
       </div>
     </div>
   </div>
+<div class="p-8 max-w-md mx-auto text-center">
+  <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-6">
+    Añadir Producto
+  </h2>
+  <div class="flex flex-col gap-5">
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        Nombre del Producto
+      </label>
+      <input
+        type="text"
+        [(ngModel)]="name"
+        class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100"
+      >
+    </div>
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        Precio del Producto
+      </label>
+      <input
+        type="number"
+        [(ngModel)]="price"
+        class="w-30 ml-14 px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100"
+      >
+    </div>
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        Stock del Producto
+      </label>
+      <input
+        type="number"
+        [(ngModel)]="stock"
+        class="w-30 px-3 ml-14 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100"
+      >
+    </div>
+    <button class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 cursor-pointer text-white font-semibold uppercase tracking-wide rounded-xl px-8 py-4 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-focus:ring-blue-300 mt-2" (click)="createProduct()">
+      Añadir Producto
+    </button>
+
+  </div>
+</div>
 </div>
