@@ -31,7 +31,7 @@ const profileValidations= [
 ];
 
 router.get('/profile',authMiddleware,getUserProfile);
-
+router.get('/all-users',authMiddleware,getAllUsers);
 router.post('/register',
   [
     body("displayName")
