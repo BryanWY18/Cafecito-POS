@@ -23,12 +23,12 @@ export class UserService {
     this.selectedUserSubject.next(null);
   }
 
-getUsers(): Observable<User[]> {
-  return this.httpClient
-    .get<UsersResponse>(`${this.baseUrlUsers}/all-users`)
-    .pipe(
-      map(response => response.users)
-    );
-}
+  getUsers(): Observable<User[]> {
+    return this.httpClient
+      .get<UsersResponse>(`${this.baseUrlUsers}/all-users`)
+      .pipe(
+        map(response => response.users)
+      );
+  }
 
 }

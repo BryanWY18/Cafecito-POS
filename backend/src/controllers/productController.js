@@ -45,14 +45,17 @@ async function getProductById(req, res) {
   }
 }
 
-async function createProduct(req, res) {
+async function createProduct(req, res, next) {
   try {
     const { name, price, stock } = req.body;
 
     if (!name || !price || !stock) {
       return res.status(400).json({ error: "All fields are required" });
     }
-
+    const productExist = await Product.findOne({name});
+    if (productExist) {
+      return res.status(404).json({ message: "Product already exist" });
+    }
     const newProduct = await Product.create({
       name,
       price,

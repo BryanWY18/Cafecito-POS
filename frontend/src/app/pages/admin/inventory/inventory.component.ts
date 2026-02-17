@@ -3,11 +3,14 @@ import { ProductsService } from '../../../core/services/products/products.servic
 import { SaleService } from '../../../core/services/sale/sale.service';
 import { ProductResponse } from '../../../core/types/Products';
 import { CurrencyPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-inventory',
   standalone: true,
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, RouterLink, FormsModule],
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.css'
 })  
@@ -23,7 +26,11 @@ export class InventoryComponent {
         totalPages:0,
       }
     };
-  
+
+    name:string = "";
+    price:number=0;
+    stock:number=0;
+    
     constructor(private productService:ProductsService, private saleService:SaleService){}
     
     ngOnInit(): void {
@@ -61,9 +68,68 @@ export class InventoryComponent {
         .join('')
         .toUpperCase();
     }
-  
-    addToSale(product:any) {
-      this.saleService.addProductToSale(product);
+
+    createProduct(){
+      this.productService.createProduct({
+        name:this.name,
+        price:this.price,
+        stock:this.stock
+      }).subscribe({
+        next:()=>{
+          alert('Producto creado exitosamente');
+          this.name='';
+          this.price=0;
+          this.stock=0;
+        },
+        error:(error)=>{
+          console.log('Status:', error.status);
+          console.log('Error completo:', error.error);         
+        }
+      })
+    }
+
+    deleteProduct(id:string){
+      this.productService.deleteProduct(id).subscribe({
+        next:()=>{
+          alert('Producto eliminado del invetario');
+          this.getProducts();
+        },
+        error:(error)=>{
+          console.log('Status:', error.status);
+          console.log('Error completo:', error.error);         
+        }
+      })
+    }
+
+    reStock(id:string){
+      Swal.fire({
+          title: 'Actualizar Datos',
+          html: `
+            <input id="name" class="swal2-input" placeholder="Nombre del producto">
+            <input id="price" type="number" class="swal2-input" placeholder="Precio">
+            <input id="stock" type="number" class="swal2-input" placeholder="Stock">
+          `,
+          showCancelButton: true,
+          confirmButtonText: 'Actualizar',
+          cancelButtonText: 'Cancelar',
+          preConfirm: () => {
+            return {
+              name: (document.getElementById('name') as HTMLInputElement).value,
+              price: (document.getElementById('price') as HTMLInputElement).value,
+              stock: (document.getElementById('stock') as HTMLInputElement).value
+            };
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            const product = result.value;
+            this.productService.updateProduct(id, product).subscribe({
+              next:()=>{
+                Swal.fire('Éxito', 'Producto actualizado correctamente', 'success');
+                this.getProducts();
+              }
+            })
+        }
+      });
     }
 
 }
