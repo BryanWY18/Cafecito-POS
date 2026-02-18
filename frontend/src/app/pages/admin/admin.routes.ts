@@ -2,10 +2,10 @@ import { Routes } from "@angular/router";
 
 export const ADMIN_ROUTES: Routes= [
   {
-    path: 'register-employ',
+    path: 'clientes',
     loadComponent: ()=> import('./register-user/register-user.component').then(
       c=>c.RegisterUserComponent),
-    title: 'Register new User'
+    title: 'Clients'
   }, 
   {
     path: 'inventario',

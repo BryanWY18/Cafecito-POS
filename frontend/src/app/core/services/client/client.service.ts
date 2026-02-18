@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, map, throwError } from 'rxjs';
-import { Client, clientSchema, clientArraySchema } from '../../types/Client';
+import { Client, clientSchema, clientArraySchema, ClientResponse } from '../../types/Client';
 
 @Injectable({
   providedIn: 'root'
@@ -22,18 +22,11 @@ export class ClientService {
     this.selectedClientSubject.next(null);
   }
 
-  getCustomers():Observable<Client[]>{
-    return this.httpClient.get<Client[]>(`${this.baseUrl}`).pipe(
-      map((data:any)=>{
-        const response=clientArraySchema.safeParse(data.client);
-        if(!response.success){
-          console.log(response.error)
-          throw new Error(`${response.error}`);
-        }
-        return response.data;
-      })
-    )
-  } 
+  getCustomers(page: number = 1, limit: number = 10): Observable<ClientResponse> {
+    return this.httpClient.get<ClientResponse>(
+      `${this.baseUrl}?page=${page}&limit=${limit}`
+    );
+  }
 
   getCustomerById(id:string):Observable<Client>{
     return this.httpClient.get<Client>(`${this.baseUrl}/${id}`).pipe(

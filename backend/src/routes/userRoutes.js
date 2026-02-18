@@ -51,5 +51,6 @@ router.post('/register',
       .isIn(["admin", "seller"]).withMessage("Role must be admin or seller"),
   ],
   validate,authMiddleware,isAdmin,createUser);
+router.delete('/:id',authMiddleware,isAdmin,deleteUser)
 
 export default router;
