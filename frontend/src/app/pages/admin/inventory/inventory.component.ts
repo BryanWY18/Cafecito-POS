@@ -76,7 +76,8 @@ export class InventoryComponent {
         stock:this.stock
       }).subscribe({
         next:()=>{
-          alert('Producto creado exitosamente');
+          Swal.fire('Éxito', 'Producto nuevo agregado', 'success');
+          this.getProducts();
           this.name='';
           this.price=0;
           this.stock=0;
@@ -89,16 +90,25 @@ export class InventoryComponent {
     }
 
     deleteProduct(id:string){
-      this.productService.deleteProduct(id).subscribe({
-        next:()=>{
-          alert('Producto eliminado del invetario');
-          this.getProducts();
-        },
-        error:(error)=>{
-          console.log('Status:', error.status);
-          console.log('Error completo:', error.error);         
+      Swal.fire({
+        title: '¿Eliminar Producto?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.productService.deleteProduct(id).subscribe({
+            next:()=>{
+              Swal.fire('Producto Eliminado');
+              this.getProducts();
+            },
+            error: (error) => {
+              console.error('Error al eliminar producto:', error);
+            }
+          });
         }
-      })
+      });
     }
 
     reStock(product: any) {
