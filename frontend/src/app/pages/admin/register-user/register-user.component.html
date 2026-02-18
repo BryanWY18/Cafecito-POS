@@ -1,1 +1,74 @@
-<p>register-user works!</p>
+<div class="w-full mx-auto p-2 bg-green-700">
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h2 class="text-3xl font-bold text-gray-900 pt-6 pl-6 mb-3">Registro de Clientes</h2>
+      <h3 class="text-2xl font-bold text-gray-900 pt-3 pl-6 mb-3">"Programa de Lealtad"</h3>
+    </div>
+    <div class="flex items-center gap-4 ">
+      <button class="cursor-pointer mr-9 bg-gray-400 rounded-2xl p-3" routerLink="/dashboard" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="">
+  <div class="shadow-md overflow-hidden h-screen overflow-y-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-green-600">
+        <tr>
+          <th class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Nombre</th>
+          <th class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Teléfono o Email</th>
+          <th class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Visitas</th>
+        </tr>
+      </thead>
+      <tbody class="bg-gray-400 divide-y divide-gray-200">
+        @for(client of allClients; track client._id){
+          <tr class="hover:bg-gray-300 transition-colors">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">{{ client.name }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">{{ client.phoneOrEmail }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">{{ client.purchasesCount }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <!-- Controles de paginación (solo desktop) -->
+    <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200">
+      <div>
+        <p class="text-sm text-gray-700">
+          Página <span class="font-medium">{{ currentPage }}</span> de <span class="font-medium">{{ totalPages }}</span>
+        </p>
+      </div>
+      <div>
+        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+          <button 
+            (click)="prevPage()" 
+            [disabled]="!hasPrev"
+            class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+            Anterior
+          </button>
+          
+          @for(page of [].constructor(totalPages); track $index) {
+            <button 
+              (click)="goToPage($index + 1)"
+              [class.bg-green-600]="currentPage === $index + 1"
+              [class.text-white]="currentPage === $index + 1"
+              [class.bg-white]="currentPage !== $index + 1"
+              [class.text-gray-700]="currentPage !== $index + 1"
+              class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium hover:bg-gray-50">
+              {{ $index + 1 }}
+            </button>
+          }
+          
+          <button 
+            (click)="nextPage()" 
+            [disabled]="!hasNext"
+            class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+            Siguiente
+          </button>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

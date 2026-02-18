@@ -237,20 +237,14 @@ const toggleUserStatus = async (req, res, next) => {
   }
 };
 
-// Eliminar cuenta (soft delete)
+// Eliminar cuenta
 const deleteUser = async (req, res, next) => {
   try {
-    const { userId } = req.params;
-
-    const user = await User.findById(userId);
+    const { id } = req.params
+    const user = await User.findByIdAndDelete(id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    // Soft delete - solo desactivar
-    user.isActive = false;
-    await user.save();
-
     res.status(200).json({
       message: "User deleted successfully",
     });

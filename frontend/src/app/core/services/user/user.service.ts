@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { User, UserCredentials, UsersResponse } from '../../types/User';
+import { User, UserCredentials, UserForm, UsersResponse } from '../../types/User';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { AuthService, decodedToken } from '../auth/auth.service';
 
@@ -29,6 +29,14 @@ export class UserService {
       .pipe(
         map(response => response.users)
       );
+  }
+
+  createUser(userData: UserForm): Observable<User>{
+    return this.httpClient.post<User>(`${this.baseUrlUsers}/register`, userData )
+  }
+
+  deleteUser(id:string):Observable<User>{
+    return this.httpClient.delete<User>(`${this.baseUrlUsers}/${id}`)
   }
 
 }

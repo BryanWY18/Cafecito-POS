@@ -101,33 +101,42 @@ export class InventoryComponent {
       })
     }
 
-    reStock(id:string){
+    reStock(product: any) {
       Swal.fire({
-          title: 'Actualizar Datos',
-          html: `
-            <input id="name" class="swal2-input" placeholder="Nombre del producto">
-            <input id="price" type="number" class="swal2-input" placeholder="Precio">
-            <input id="stock" type="number" class="swal2-input" placeholder="Stock">
-          `,
-          showCancelButton: true,
-          confirmButtonText: 'Actualizar',
-          cancelButtonText: 'Cancelar',
-          preConfirm: () => {
-            return {
-              name: (document.getElementById('name') as HTMLInputElement).value,
-              price: (document.getElementById('price') as HTMLInputElement).value,
-              stock: (document.getElementById('stock') as HTMLInputElement).value
-            };
-          }
-        }).then((result) => {
-          if (result.isConfirmed) {
-            const product = result.value;
-            this.productService.updateProduct(id, product).subscribe({
-              next:()=>{
-                Swal.fire('Éxito', 'Producto actualizado correctamente', 'success');
-                this.getProducts();
-              }
-            })
+        title: 'Actualizar Datos',
+        html: `
+          <label style="display:block; text-align:center; margin:8px 0 4px;">Nombre del producto</label>
+          <input id="name" class="swal2-input" placeholder="Nombre del producto" value="${product.name}">
+          <label style="display:block; text-align:center; margin:8px 0 4px;">Precio</label>
+          <input id="price" type="number" class="swal2-input" placeholder="Precio" value="${product.price}">
+          <label style="display:block; text-align:center; margin:8px 0 4px;">Stock</label>
+          <input id="stock" type="number" class="swal2-input" placeholder="Stock" value="${product.stock}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Actualizar',
+        cancelButtonText: 'Cancelar',
+        preConfirm: () => {
+          const name = (document.getElementById('name') as HTMLInputElement).value;
+          const price = (document.getElementById('price') as HTMLInputElement).value;
+          const stock = (document.getElementById('stock') as HTMLInputElement).value;
+          return {
+            name: name || product.name,
+            price: price ? Number(price) : product.price,
+            stock: stock ? Number(stock) : product.stock
+          };
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.productService.updateProduct(product._id, result.value).subscribe({
+            next: () => {
+              Swal.fire('Éxito', 'Producto actualizado correctamente', 'success');
+              this.getProducts();
+            },
+            error: (error) => {
+              Swal.fire('Error', 'No se pudo actualizar el producto', 'error');
+              console.error(error);
+            }
+          });
         }
       });
     }

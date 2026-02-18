@@ -25,7 +25,7 @@ const getClients = async(req,res,next)=>{
       pagination: {
         currentPage: page,
         totalPages,
-        totalResults,
+        totalResults, 
         hasNext: page < totalPages,
         hasPrev: page > 1,
       },

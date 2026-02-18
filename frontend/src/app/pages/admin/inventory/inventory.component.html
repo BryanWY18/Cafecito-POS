@@ -1,8 +1,8 @@
-<div class="container mx-auto p-6 bg-gray-300">
+<div class="w-full mx-auto p-2 bg-gray-300">
   <div class="flex items-center justify-between mb-6">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">Inventario de Productos</h2>
+    <h2 class="text-3xl font-bold text-gray-800 pt-9 pl-6 mb-3">Inventario de Productos</h2>
     <div class="flex items-center gap-4 ">
-      <button class="cursor-pointer" routerLink="/dashboard" >
+      <button class="cursor-pointer mr-9 bg-blue-500 rounded-2xl p-3" routerLink="/dashboard" >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
         </svg>
@@ -34,11 +34,11 @@
                   <p class="font-bold text-zinc-400">{{product.stock }}</p>
                 </div>
                 @if(product.stock===0){
-                  <button class="flex items-center justify-center w-20 h-10 rounded-2xl bg-zinc-100 dark:bg-red-500 hover:bg-red-600 text-black font-black text-xs disabled:cursor-not-allowed cursor-pointer" (click)="reStock(product._id)">
+                  <button class="flex items-center justify-center w-20 h-10 rounded-2xl bg-zinc-100 dark:bg-red-500 hover:bg-red-600 text-black font-black text-xs disabled:cursor-not-allowed cursor-pointer" (click)="reStock(product)">
                     Rebastecer
                   </button>
                 }@else {
-                  <button class="flex items-center justify-center w-20 h-10 rounded-2xl bg-zinc-100 dark:bg-green-500 hover:bg-green-600 text-black font-black text-xs disabled:cursor-not-allowed cursor-pointer" (click)="reStock(product._id)">
+                  <button class="flex items-center justify-center w-20 h-10 rounded-2xl bg-zinc-100 dark:bg-green-500 hover:bg-green-600 text-black font-black text-xs disabled:cursor-not-allowed cursor-pointer" (click)="reStock(product)">
                     Actualizar
                   </button>
                 }
@@ -89,10 +89,9 @@
         class="w-30 px-3 ml-14 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100"
       >
     </div>
-    <button class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 cursor-pointer text-white font-semibold uppercase tracking-wide rounded-xl px-8 py-4 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-focus:ring-blue-300 mt-2" (click)="createProduct()">
+    <button class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 cursor-pointer text-white font-semibold uppercase tracking-wide rounded-xl px-8 py-4 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-focus:ring-blue-300 mt-2 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none" [disabled]="name==='' || price <= 0 || stock <= 0" (click)="createProduct()">
       Añadir Producto
     </button>
-
   </div>
 </div>
 </div>

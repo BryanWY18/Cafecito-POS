@@ -12,7 +12,7 @@ import { UserService } from '../../../core/services/user/user.service';
 @Component({
   selector: 'app-login-form',
   standalone: true,
-  imports: [FormFieldComponent, ReactiveFormsModule, RouterLink],
+  imports: [FormFieldComponent, ReactiveFormsModule],
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.css'
 })
