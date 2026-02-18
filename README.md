@@ -1,13 +1,13 @@
 # Cafecito-POS ☕
 
-**Cafecito-POS** es un sistema de punto de venta integral diseñado para optimizar el flujo de ventas en cafeterías. El sistema permite gestionar pedidos de forma ágil, administrar un programa de lealtad de clientes y proteger el acceso mediante un dashboard de sesión para baristas.
+**Cafecito-POS** sistema de punto de venta integral, diseñado para optimizar el flujo de ventas en cafeterías. El sistema permite gestionar pedidos de forma ágil, administrar un programa de lealtad de clientes y proteger el acceso mediante un dashboard de sesión para baristas y administrador, teniendo este último acceso a Inventario, Usuarios y Clientes con operaciones CRUD.
 
 ---
 
 ## 🚀 Características Principales
 
-* **Punto de Venta Interactivo:** Interfaz visual con catálogo de productos y botón de añadir rápido.
-* **Gestión de Órdenes:** Carrito de compras con opción para modificar cantidades, eliminar productos específicos o cancelar la venta completa.
+* **Punto de Venta Interactivo:** Interfaz visual con catálogo de productos y despliegue de información puntual.
+* **Gestión de Órdenes:** Carrito de compras con opción para modificar cantidades,  cancelación de venta completa y vinculación con cliente registrado.
 * **Programa de Lealtad:** Registro de nuevos clientes y buscador por ID para aplicar beneficios.
 * **Seguridad:** Dashboard protegido por login con registro de inicio de sesión del barista.
 * **Tickets de Venta:** Generación de comprobantes de pago con cálculo automático de descuentos.
@@ -18,6 +18,7 @@
 * **Backend:** Node.js / Express (API RESTful).
 * **Base de Datos:** MongoDB (Persistencia de datos).
 * **Autenticación:** JWT (JSON Web Tokens).
+* **Deploy:** GithubActions y Docker.
 
 ---
 
@@ -27,7 +28,7 @@
 * Node.js instalado.
 * Instancia de MongoDB (Local o Atlas).
 
-### 2. Backend
+### 2. 💻 Backend
 Entra a la carpeta del servidor e instala las dependencias:
 ```bash
 cd backend
@@ -53,7 +54,7 @@ FRONT_APP_URL=http://localhost:4200
 INITIAL_DATA=true
 ```
 
-## Frontend (Angular)
+## 🅰️ Frontend (Angular)
 
 ### Instalación de Dependencias
 
@@ -71,7 +72,18 @@ ng serve
 
 La aplicación estará disponible en `http://localhost:4200`
 
-### Instalación de TailwindCSS
+🚩Página de inicio resguardada con login, para pruebas usar estas credenciales:
+
+-Admin: 
+  email@example.com
+  qwerty1
+
+-Seller:
+  bryan@example.com
+  qwerty2
+  
+
+### 🎨 Instalación de TailwindCSS
 
 Para una guía completa de instalación, consultar: https://tailwindcss.com/docs/installation/framework-guides/angular
 
@@ -105,3 +117,41 @@ Para mejorar la experiencia de desarrollo con TailwindCSS, se recomienda instala
 - Proporciona autocompletado inteligente, resaltado de sintaxis y linting para clases de Tailwind
 - Muestra previsualizaciones de los estilos CSS al pasar el cursor sobre las clases
 - Valida las clases de Tailwind y sugiere correcciones
+
+---
+
+## Deploy 🚀 (Github Actions 🐙 / Docker 🐋)
+
+NOTA ⚠️ Automatizado para deploy en VPS usando contenedores Docker 🐋
+
+-Generación de Dockerfile (back y front)
+-Plantilla de back:
+
+```Dockerfile backend
+
+    FROM (node version)
+    WORKDIR /app
+    COPY package*.json ./
+    RUN npm install
+    COPY . .
+    EXPOSE 3000
+    CMD [ "npm", "start"]
+
+```
+(Dockerfile de front va ligado a Nginx, especificado en archivo ⚙️nginx.conf)
+
+-Generación de .dockerignore:
+
+```.dockerignore
+
+  node_modules
+  npm-debug.log
+  .git
+  .env 
+
+```
+
+-Workflow CI/CD automatizado:
+
+🚩 Se debe crear cuenta en DockerHub e implementar Github Secrets con credenciales y datos sensibles para realizar conección automatizada con el VPS.
+-Para más detalles, consultar archivo 📂deploy.yml con variables de entorno requeridos.
