@@ -18,12 +18,5 @@ export const ADMIN_ROUTES: Routes= [
     loadComponent: ()=> import('./users/users.component').then(
       c=>c.UsersComponent),
     title: 'Users'
-  },
-  /*
-  {
-    path: 'salesRegister',
-    loadComponent: ()=> import('./paymethods/paymethods.component').then(c=>c.PaymethodsComponent),
-    title: 'Sales Register'
-  },
-  */
+  }
 ]
